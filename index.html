@@ -695,82 +695,211 @@ function downloadPDF(){
   syncQtyFromDOM();
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF({unit:'mm',format:'a4'});
-  const t=calcTotals(),cur=t.cur,taxLabel=v('taxLabel')||'Tax';
+
+  const t=calcTotals();
+  const taxLabel=v('taxLabel')||'Tax';
   const serialNo=`INV-${String(v('invoiceNo')).padStart(5,'0')}`;
-  const dateStr=v('invoiceDate')?new Date(v('invoiceDate')).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}):'';
-  const W=210,M=16;let y=0;
+  const dateStr=v('invoiceDate')
+    ? new Date(v('invoiceDate')).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})
+    : '';
 
-  doc.setFillColor(45,107,107);doc.rect(0,0,W,26,'F');
-  doc.setFont('helvetica','bold');
+  // jsPDF helvetica cannot render ₹ — use Rs. which renders cleanly
+  const curSymbol = v('currency')||'Rs.';
+  const pdfCur = curSymbol==='₹' ? 'Rs.' : curSymbol;
+
+  const W=210, M=18, RX=W-M;
+  let y=0;
+
+  /* ══ HEADER BANNER ══ */
+  doc.setFillColor(45,107,107);
+  doc.rect(0,0,W,30,'F');
+
+  // Company name — left side, white
   const coName=v('sellerName')||'Company';
-  let fs=14;doc.setFontSize(fs);
-  while(doc.getTextWidth(coName)>W*0.55&&fs>8){fs--;doc.setFontSize(fs);}
-  doc.setTextColor(255,255,255);doc.text(coName,M,16);
-  doc.setFillColor(255,255,255);doc.roundedRect(W-54,4,38,18,2,2,'F');
-  doc.setFont('helvetica','bold');doc.setFontSize(13);doc.setTextColor(45,107,107);
-  doc.text('Invoice',W-35,16,{align:'center'});
-  y=30;
+  doc.setFont('helvetica','bold');
+  let fs=16;
+  doc.setFontSize(fs);
+  while(doc.getTextWidth(coName)>(W*0.58)&&fs>9){fs--;doc.setFontSize(fs);}
+  doc.setTextColor(255,255,255);
+  doc.text(coName, M, 19);
 
-  doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(120,120,120);
-  doc.text((v('sellerAddress')||'').replace(/\n/g,', '),M,y,{maxWidth:W-2*M});y+=8;
-  doc.setDrawColor(45,107,107);doc.setLineWidth(0.4);doc.line(M,y,W-M,y);y+=5;
+  // "Invoice" badge — right side, white box teal text
+  doc.setFillColor(255,255,255);
+  doc.roundedRect(W-52, 6, 34, 18, 2, 2, 'F');
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(14);
+  doc.setTextColor(45,107,107);
+  doc.text('Invoice', W-35, 18, {align:'center'});
+  y=34;
 
-  doc.setFontSize(7.5);doc.setTextColor(130,130,130);doc.text('Buyer:',M,y);
-  doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(20,20,20);
-  doc.text(v('buyerName')||'',M+14,y);y+=4.5;
-  doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(60,60,60);
-  (v('buyerAddress')||'').split('\n').forEach(l=>{doc.text(l,M+14,y);y+=4;});
-
-  const rx=W-M;
-  doc.setFontSize(7.5);doc.setTextColor(130,130,130);
-  doc.text('Date:',rx-52,34);doc.text('Invoice #:',rx-52,39);
-  doc.setFont('helvetica','bold');doc.setTextColor(20,20,20);
-  doc.text(dateStr,rx,34,{align:'right'});doc.text(serialNo,rx,39,{align:'right'});
+  /* ══ SELLER ADDRESS ══ */
   doc.setFont('helvetica','normal');
-  y=Math.max(y,46)+2;
+  doc.setFontSize(8);
+  doc.setTextColor(110,110,110);
+  const addrLine=(v('sellerAddress')||'').replace(/\n/g,', ');
+  doc.text(addrLine, M, y, {maxWidth: W-2*M});
+  y+=7;
 
-  const thead=[['S.No','Description','Qty',`Unit Price (${cur})`,`Total (${cur})`]];
+  /* ══ DIVIDER ══ */
+  doc.setDrawColor(45,107,107);
+  doc.setLineWidth(0.5);
+  doc.line(M, y, RX, y);
+  y+=6;
+
+  /* ══ BUYER BLOCK (left) ══ */
+  const buyerStartY=y;
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(8);
+  doc.setTextColor(120,120,120);
+  doc.text('Buyer:', M, y);
+
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(10);
+  doc.setTextColor(15,15,15);
+  doc.text(v('buyerName')||'', M+18, y);
+  y+=5;
+
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(8.5);
+  doc.setTextColor(50,50,50);
+  const addrLines=(v('buyerAddress')||'').split('\n');
+  addrLines.forEach(l=>{ if(l.trim()){doc.text(l, M+18, y); y+=4.5;} });
+
+  /* ══ DATE / INVOICE # (right) ══ */
+  const metaY=buyerStartY;
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(8);
+  doc.setTextColor(120,120,120);
+  doc.text('Date:', RX-55, metaY);
+  doc.text('Invoice #:', RX-55, metaY+6);
+
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(9);
+  doc.setTextColor(15,15,15);
+  doc.text(dateStr, RX, metaY, {align:'right'});
+  doc.text(serialNo, RX, metaY+6, {align:'right'});
+
+  y=Math.max(y, metaY+14)+4;
+
+  /* ══ ITEMS TABLE ══ */
+  const thead=[['S.No', 'Description', 'Qty', 'Unit Price', 'Total']];
   const tbody=items.map((it,i)=>[
-    String(i+1),getItemDesc(it),String(parseFloat(it.qty)||0),
-    fmt(getItemPrice(it)),fmt(getItemTotal(it))
+    String(i+1),
+    getItemDesc(it)||'—',
+    String(parseFloat(it.qty)||0),
+    `${pdfCur} ${fmt(getItemPrice(it))}`,
+    `${pdfCur} ${fmt(getItemTotal(it))}`
   ]);
-  while(tbody.length<8)tbody.push(['','','','','']);
+  // pad to 8 rows minimum
+  while(tbody.length<8) tbody.push(['','','','','']);
 
   doc.autoTable({
-    startY:y,head:thead,body:tbody,margin:{left:M,right:M},
-    styles:{fontSize:8.5,cellPadding:2.8,textColor:[20,20,20]},
-    headStyles:{fillColor:[45,107,107],textColor:[255,255,255],fontStyle:'bold',fontSize:8.5},
-    alternateRowStyles:{fillColor:[246,250,250]},
-    columnStyles:{0:{cellWidth:11,halign:'center'},1:{cellWidth:'auto'},2:{cellWidth:14,halign:'right'},3:{cellWidth:30,halign:'right'},4:{cellWidth:30,halign:'right'}}
+    startY: y,
+    head: thead,
+    body: tbody,
+    margin: {left:M, right:M},
+    tableWidth: W-2*M,
+    styles: {
+      font:'helvetica',
+      fontSize: 9,
+      cellPadding: {top:3,bottom:3,left:4,right:4},
+      textColor: [15,15,15],
+      lineColor: [210,225,225],
+      lineWidth: 0.2,
+    },
+    headStyles: {
+      fillColor: [45,107,107],
+      textColor: [255,255,255],
+      fontStyle: 'bold',
+      fontSize: 9,
+      halign: 'left',
+    },
+    alternateRowStyles: {fillColor:[246,251,251]},
+    columnStyles: {
+      0: {cellWidth:12, halign:'center', fontStyle:'bold'},
+      1: {cellWidth:'auto', halign:'left'},
+      2: {cellWidth:16, halign:'center'},
+      3: {cellWidth:34, halign:'right'},
+      4: {cellWidth:34, halign:'right', fontStyle:'bold'},
+    },
+    didParseCell: (data)=>{
+      // make empty padding rows lighter
+      if(data.section==='body' && !data.row.raw[0]){
+        data.cell.styles.fillColor=[250,252,252];
+      }
+    }
   });
-  y=doc.lastAutoTable.finalY+4;
 
-  doc.setDrawColor(45,107,107);doc.setLineWidth(0.6);doc.line(M,y,W-M,y);y+=5;
-  doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(20,20,20);
-  if(v('bankAc'))  doc.text(`A/C  : ${v('bankAc')}`,M,y+4);
-  if(v('bankIfsc'))doc.text(`IFSC : ${v('bankIfsc')}`,M,y+9);
+  y=doc.lastAutoTable.finalY+5;
 
-  const rx2=W-M,mx=W-M-50;
-  doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(90,90,90);
-  doc.text('Subtotal',mx,y+4);doc.text(`${cur} ${fmt(t.sub)}`,rx2,y+4,{align:'right'});
-  doc.text(`${taxLabel} (${t.rate}%)`,mx,y+9);
-  doc.text(t.rate>0?`${cur} ${fmt(t.tax)}`:'—',rx2,y+9,{align:'right'});
-  doc.setFillColor(45,107,107);doc.roundedRect(mx-3,y+11,rx2-mx+6,9,2,2,'F');
-  doc.setFont('helvetica','bold');doc.setFontSize(9.5);doc.setTextColor(255,255,255);
-  doc.text('Total',mx,y+17.5);doc.text(`${cur} ${fmt(t.total)}`,rx2,y+17.5,{align:'right'});
+  /* ══ FOOTER: BANK LEFT + TOTALS RIGHT ══ */
+  doc.setDrawColor(45,107,107);
+  doc.setLineWidth(0.6);
+  doc.line(M, y, RX, y);
+  y+=5;
+
+  // Bank details
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(8.5);
+  doc.setTextColor(15,15,15);
+  if(v('bankAc'))   { doc.text('A/C  : ', M, y+4); doc.setFont('helvetica','normal'); doc.text(v('bankAc'), M+18, y+4); doc.setFont('helvetica','bold'); }
+  if(v('bankIfsc')) { doc.text('IFSC : ', M, y+10); doc.setFont('helvetica','normal'); doc.text(v('bankIfsc'), M+18, y+10); doc.setFont('helvetica','bold'); }
+
+  // Totals block — right aligned
+  const labelX=RX-52, valX=RX;
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(9);
+  doc.setTextColor(80,80,80);
+
+  doc.text('Subtotal', labelX, y+4);
+  doc.text(`${pdfCur} ${fmt(t.sub)}`, valX, y+4, {align:'right'});
+
+  doc.text(`${taxLabel} (${t.rate}%)`, labelX, y+10);
+  doc.text(t.rate>0 ? `${pdfCur} ${fmt(t.tax)}` : '---', valX, y+10, {align:'right'});
+
+  // Grand total — filled box
+  const boxX=labelX-3, boxW=RX-labelX+3+3;
+  doc.setFillColor(45,107,107);
+  doc.roundedRect(boxX, y+13, boxW, 10, 2, 2, 'F');
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(10);
+  doc.setTextColor(255,255,255);
+  doc.text('Total', labelX, y+20);
+  doc.text(`${pdfCur} ${fmt(t.total)}`, valX, y+20, {align:'right'});
+
   y+=30;
 
+  /* ══ NOTES ══ */
   if(v('notes')){
-    doc.setFont('helvetica','italic');doc.setFontSize(7.5);doc.setTextColor(100,100,100);
-    doc.text(`Notes: ${v('notes')}`,M,y,{maxWidth:W-2*M});y+=6;
+    doc.setFont('helvetica','italic');
+    doc.setFontSize(8);
+    doc.setTextColor(100,100,100);
+    doc.text(`Notes: ${v('notes')}`, M, y, {maxWidth:W-2*M});
+    y+=7;
   }
-  doc.setDrawColor(200,200,200);doc.setLineWidth(0.25);doc.line(M,y,W-M,y);y+=5;
-  doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(110,110,110);
-  doc.text('Thank you for your business!',W/2,y,{align:'center'});y+=4.5;
-  const ct=[v('sellerPhone'),v('sellerEmail')].filter(Boolean).join('   ||   ');
-  doc.text(ct,W/2,y,{align:'center'});
-  doc.setFontSize(6.5);doc.setTextColor(190,190,190);
-  doc.text(serialNo,W-M,290,{align:'right'});
+
+  /* ══ THANK YOU FOOTER ══ */
+  doc.setDrawColor(200,200,200);
+  doc.setLineWidth(0.25);
+  doc.line(M, y, RX, y);
+  y+=6;
+
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(9);
+  doc.setTextColor(90,90,90);
+  doc.text('Thank you for your business!', W/2, y, {align:'center'});
+  y+=5;
+
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(8.5);
+  const phone=v('sellerPhone'), email=v('sellerEmail');
+  const contactLine=[phone,email].filter(Boolean).join('   |   ');
+  if(contactLine) doc.text(contactLine, W/2, y, {align:'center'});
+
+  /* ══ SERIAL # WATERMARK ══ */
+  doc.setFontSize(7);
+  doc.setTextColor(190,190,190);
+  doc.text(serialNo, RX, 290, {align:'right'});
 
   doc.save(`${serialNo}_${(v('buyerName')||'invoice').replace(/\s+/g,'_')}.pdf`);
 }
