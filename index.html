@@ -7,226 +7,144 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <style>
-/* ══════════════════════════════
-   TOKENS
-══════════════════════════════ */
 :root{
-  --teal:#2d6b6b; --teal-dark:#1e4d4d; --teal-light:#e8f4f4;
-  --teal-mid:#3d8a8a;
-  --accent:#c0392b; --text:#1a1a1a; --muted:#5a6a7a;
-  --border:#c8d4d4; --bg:#edf2f2; --white:#fff; --r:10px;
+  --teal:#2d6b6b;--teal-dark:#1e4d4d;--teal-mid:#3d8a8a;--teal-light:#e8f4f4;
+  --accent:#c0392b;--text:#1a1a1a;--muted:#5a6a7a;
+  --border:#c8d4d4;--bg:#edf2f2;--white:#fff;--r:10px;
   --shadow:0 2px 12px rgba(0,0,0,.10);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:16px;}
 
-/* ══════════════════════════════
-   PASSWORD SCREEN
-══════════════════════════════ */
-#lockScreen{
-  position:fixed;inset:0;background:linear-gradient(135deg,var(--teal-dark) 0%,var(--teal-mid) 100%);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;
-}
-.lock-card{
-  background:#fff;border-radius:20px;padding:44px 40px 36px;
-  text-align:center;width:min(420px,92vw);
-  box-shadow:0 16px 60px rgba(0,0,0,.3);
-}
-.lock-logo{
-  width:72px;height:72px;background:var(--teal);border-radius:50%;
-  display:flex;align-items:center;justify-content:center;margin:0 auto 18px;
-}
+/* ── LOCK ── */
+#lockScreen{position:fixed;inset:0;background:linear-gradient(135deg,var(--teal-dark),var(--teal-mid));display:flex;align-items:center;justify-content:center;z-index:9999;}
+.lock-card{background:#fff;border-radius:20px;padding:44px 40px 36px;text-align:center;width:min(420px,92vw);box-shadow:0 16px 60px rgba(0,0,0,.3);}
+.lock-logo{width:72px;height:72px;background:var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;}
 .lock-logo svg{width:36px;height:36px;stroke:#fff;fill:none;stroke-width:2;}
 .lock-title{font-size:26px;font-weight:800;color:var(--teal-dark);margin-bottom:6px;}
 .lock-sub{font-size:15px;color:var(--muted);margin-bottom:28px;}
-.lock-label{display:block;font-size:14px;font-weight:700;color:var(--muted);margin-bottom:8px;text-align:left;}
-.lock-input{
-  width:100%;padding:14px 16px;border:2px solid var(--border);border-radius:var(--r);
-  font-size:18px;letter-spacing:3px;text-align:center;font-family:inherit;
-  color:var(--text);outline:none;transition:border-color .2s;
-}
-.lock-input:focus{border-color:var(--teal);}
+.lock-lbl{display:block;font-size:14px;font-weight:700;color:var(--muted);margin-bottom:8px;text-align:left;}
+.lock-inp{width:100%;padding:14px 16px;border:2px solid var(--border);border-radius:var(--r);font-size:20px;letter-spacing:4px;text-align:center;font-family:inherit;color:var(--text);outline:none;transition:border-color .2s;}
+.lock-inp:focus{border-color:var(--teal);}
 .lock-err{color:var(--accent);font-size:14px;margin-top:10px;min-height:20px;font-weight:600;}
-.lock-btn{
-  margin-top:22px;width:100%;padding:15px;background:var(--teal);color:#fff;
-  border:none;border-radius:var(--r);font-size:18px;font-weight:700;cursor:pointer;
-  letter-spacing:.5px;transition:background .2s;
-}
+.lock-btn{margin-top:22px;width:100%;padding:16px;background:var(--teal);color:#fff;border:none;border-radius:var(--r);font-size:18px;font-weight:700;cursor:pointer;}
 .lock-btn:hover{background:var(--teal-dark);}
 .lock-hint{margin-top:14px;font-size:13px;color:#aaa;}
 
-/* ══════════════════════════════
-   MAIN APP
-══════════════════════════════ */
+/* ── APP ── */
 #mainApp{display:none;}
-
-/* ── TAB BAR ── */
-.tab-bar{
-  background:var(--teal-dark);display:flex;align-items:center;
-  padding:0 24px;gap:4px;position:sticky;top:0;z-index:100;
-  box-shadow:0 2px 8px rgba(0,0,0,.2);
-}
-.tab-bar-title{color:#fff;font-size:17px;font-weight:800;letter-spacing:.5px;margin-right:auto;padding:14px 0;}
-.tab-btn{
-  padding:14px 22px;border:none;background:none;color:rgba(255,255,255,.65);
-  font-size:15px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;
-  transition:color .2s,border-color .2s;white-space:nowrap;
-}
+.tab-bar{background:var(--teal-dark);display:flex;align-items:center;padding:0 16px;gap:4px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2);}
+.tab-bar-title{color:#fff;font-size:16px;font-weight:800;margin-right:auto;padding:14px 0;white-space:nowrap;}
+.tab-btn{padding:14px 20px;border:none;background:none;color:rgba(255,255,255,.6);font-size:15px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;}
 .tab-btn.active{color:#fff;border-bottom-color:#7ecece;}
-.tab-btn:hover{color:#fff;}
-
-/* ── CONTENT AREA ── */
 .tab-content{display:none;}
 .tab-content.active{display:block;}
 
-/* ══════════════════════════════
-   PRODUCT CATALOG TAB
-══════════════════════════════ */
+/* ── CATALOG ── */
 .catalog-page{max-width:900px;margin:0 auto;padding:28px 20px;}
 .page-heading{font-size:22px;font-weight:800;color:var(--teal-dark);margin-bottom:6px;}
-.page-sub{font-size:14px;color:var(--muted);margin-bottom:24px;}
-
-/* Add product form */
-.add-product-card{
-  background:#fff;border-radius:var(--r);box-shadow:var(--shadow);
-  padding:24px;margin-bottom:28px;border:1.5px solid var(--border);
-}
-.add-product-card h3{font-size:16px;font-weight:700;color:var(--teal-dark);margin-bottom:16px;}
+.page-sub{font-size:15px;color:var(--muted);margin-bottom:24px;}
+.add-product-card{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);padding:24px;margin-bottom:28px;border:1.5px solid var(--border);}
+.add-product-card h3{font-size:17px;font-weight:700;color:var(--teal-dark);margin-bottom:16px;}
 .cat-form-row{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:12px;align-items:flex-end;}
-.field-grp label{font-size:13px;font-weight:700;color:var(--muted);margin-bottom:5px;display:block;}
-.field-grp input{
-  width:100%;padding:12px 14px;border:2px solid var(--border);border-radius:var(--r);
-  font-size:15px;font-family:inherit;color:var(--text);outline:none;transition:border-color .2s;
-}
-.field-grp input:focus{border-color:var(--teal);}
-.cat-add-btn{
-  padding:12px 20px;background:var(--teal);color:#fff;border:none;border-radius:var(--r);
-  font-size:15px;font-weight:700;cursor:pointer;white-space:nowrap;height:48px;
-}
+.fgrp label{font-size:13px;font-weight:700;color:var(--muted);margin-bottom:5px;display:block;}
+.fgrp input{width:100%;padding:12px 14px;border:2px solid var(--border);border-radius:var(--r);font-size:15px;font-family:inherit;color:var(--text);outline:none;transition:border-color .2s;}
+.fgrp input:focus{border-color:var(--teal);}
+.cat-add-btn{padding:12px 20px;background:var(--teal);color:#fff;border:none;border-radius:var(--r);font-size:15px;font-weight:700;cursor:pointer;white-space:nowrap;height:50px;}
 .cat-add-btn:hover{background:var(--teal-dark);}
-
-/* Product table */
-.product-table-wrap{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;border:1.5px solid var(--border);}
-.product-table-head{
-  display:grid;grid-template-columns:40px 1fr 140px 140px 100px;
-  background:var(--teal);color:#fff;font-size:13px;font-weight:700;
-  letter-spacing:.4px;text-transform:uppercase;padding:12px 16px;gap:10px;
-}
-.product-table-head span:nth-child(3),
-.product-table-head span:nth-child(4){text-align:right;}
-.product-table-head span:nth-child(5){text-align:center;}
-
-.product-row{
-  display:grid;grid-template-columns:40px 1fr 140px 140px 100px;
-  padding:11px 16px;gap:10px;align-items:center;border-bottom:1px solid #e4eeee;
-  transition:background .15s;
-}
-.product-row:last-child{border-bottom:none;}
-.product-row:hover{background:#f4fbfb;}
+.prod-tbl-wrap{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;border:1.5px solid var(--border);}
+.prod-tbl-head{display:grid;grid-template-columns:40px 1fr 120px 140px 120px;background:var(--teal);color:#fff;font-size:13px;font-weight:700;text-transform:uppercase;padding:12px 16px;gap:10px;}
+.prod-tbl-head span:nth-child(3),.prod-tbl-head span:nth-child(4){text-align:right;}
+.prod-tbl-head span:nth-child(5){text-align:center;}
+.prod-row{display:grid;grid-template-columns:40px 1fr 120px 140px 120px;padding:12px 16px;gap:10px;align-items:center;border-bottom:1px solid #e4eeee;}
+.prod-row:last-child{border-bottom:none;}
+.prod-row:hover{background:#f4fbfb;}
 .prod-num{font-size:13px;color:var(--muted);font-weight:700;}
-.prod-name{font-size:15px;font-weight:600;color:var(--text);}
-.prod-price{font-size:15px;font-weight:700;color:var(--teal-dark);text-align:right;}
-.prod-unit{font-size:13px;color:var(--muted);text-align:right;}
-.prod-actions{display:flex;gap:6px;justify-content:center;}
-.prod-del-btn{
-  background:#fee2e2;border:none;color:var(--accent);padding:6px 10px;
-  border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;
-}
-.prod-del-btn:hover{background:#fcc;}
-.prod-edit-btn{
-  background:var(--teal-light);border:none;color:var(--teal-dark);padding:6px 10px;
-  border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;
-}
+.prod-name-cell{font-size:15px;font-weight:600;}
+.prod-unit-cell{font-size:14px;color:var(--muted);text-align:right;}
+.prod-price-cell{font-size:16px;font-weight:700;color:var(--teal-dark);text-align:right;}
+.prod-acts{display:flex;gap:6px;justify-content:center;}
+.prod-edit-btn{background:var(--teal-light);border:none;color:var(--teal-dark);padding:7px 12px;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;}
 .prod-edit-btn:hover{background:#c0e8e8;}
+.prod-del-btn{background:#fee2e2;border:none;color:var(--accent);padding:7px 12px;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;}
+.prod-del-btn:hover{background:#fcc;}
+.empty-catalog{text-align:center;padding:48px;color:var(--muted);font-size:16px;}
 
-.empty-catalog{text-align:center;padding:40px;color:var(--muted);font-size:15px;}
-
-/* ══════════════════════════════
-   INVOICE TAB
-══════════════════════════════ */
-.invoice-page{
-  display:grid;grid-template-columns:480px 1fr;min-height:calc(100vh - 52px);
-}
-
-/* FORM SIDE */
+/* ── INVOICE PAGE ── */
+.invoice-page{display:grid;grid-template-columns:500px 1fr;min-height:calc(100vh - 52px);}
 .inv-form-side{background:#fff;padding:28px 24px;overflow-y:auto;border-right:2px solid var(--border);}
-.section-label{
-  font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;
-  color:var(--muted);margin:22px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--border);
-}
+.sec-lbl{font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);margin:22px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--border);}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
-.form-row.single{grid-template-columns:1fr;}
-.form-row.triple{grid-template-columns:1fr 1fr 1fr;}
+.form-row.s{grid-template-columns:1fr;}
+.form-row.t{grid-template-columns:1fr 1fr 1fr;}
 label{display:block;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:5px;}
-input,textarea,select{
-  width:100%;padding:11px 13px;border:2px solid var(--border);border-radius:var(--r);
-  font-size:15px;font-family:inherit;color:var(--text);background:#fff;outline:none;
-  transition:border-color .2s;
-}
+input,textarea,select{width:100%;padding:11px 13px;border:2px solid var(--border);border-radius:var(--r);font-size:15px;font-family:inherit;color:var(--text);background:#fff;outline:none;transition:border-color .2s;}
 input:focus,textarea:focus,select:focus{border-color:var(--teal);}
 textarea{resize:vertical;min-height:64px;}
 
-/* ── LINE ITEMS ── */
-.items-table-head{
-  display:grid;grid-template-columns:1fr 90px 120px 120px 44px;
-  gap:8px;padding:10px 12px;background:var(--teal);border-radius:var(--r) var(--r) 0 0;
-  color:#fff;font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;margin-top:12px;
-}
-.items-table-head span:nth-child(2),
-.items-table-head span:nth-child(3),
-.items-table-head span:nth-child(4){text-align:right;}
-.items-table-body{border:2px solid var(--border);border-top:none;border-radius:0 0 var(--r) var(--r);}
+/* ── ITEM ROWS ── */
+/* Desktop header */
+.items-thead{display:grid;grid-template-columns:1fr 100px 160px 52px;gap:8px;padding:10px 12px;background:var(--teal);border-radius:var(--r) var(--r) 0 0;color:#fff;font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;margin-top:12px;}
+.items-thead span:nth-child(2){text-align:center;}
+.items-body{border:2px solid var(--border);border-top:none;border-radius:0 0 var(--r) var(--r);}
 
-/* desktop item row */
-.item-row{
-  display:grid;grid-template-columns:1fr 90px 120px 120px 44px;
-  gap:8px;padding:8px 10px;border-bottom:1px solid var(--border);align-items:center;
-}
+/* Each item row — desktop */
+.item-row{padding:10px 12px;border-bottom:1px solid var(--border);}
 .item-row:last-child{border-bottom:none;}
-.item-row input{border:1.5px solid transparent;background:transparent;padding:6px 8px;font-size:14px;}
-.item-row input:focus{border-color:var(--teal);background:#fff;border-radius:6px;}
-.item-row input[type=number]{text-align:right;}
 
-/* product dropdown in item row */
-.item-desc-wrap{position:relative;}
-.item-desc-wrap input{width:100%;}
-.prod-dropdown{
-  position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:200;
-  background:#fff;border:2px solid var(--teal);border-radius:var(--r);
-  box-shadow:0 8px 24px rgba(0,0,0,.15);max-height:220px;overflow-y:auto;display:none;
-}
-.prod-dropdown.open{display:block;}
-.prod-dd-item{
-  padding:10px 14px;cursor:pointer;display:flex;justify-content:space-between;
-  align-items:center;font-size:14px;border-bottom:1px solid #eef4f4;
-}
-.prod-dd-item:last-child{border-bottom:none;}
-.prod-dd-item:hover{background:var(--teal-light);}
-.prod-dd-name{font-weight:600;color:var(--text);}
-.prod-dd-price{font-weight:700;color:var(--teal-dark);font-size:13px;}
-.prod-dd-none{padding:12px 14px;color:var(--muted);font-size:14px;}
+/* Desktop grid inside item-row */
+.item-desktop{display:grid;grid-template-columns:1fr 100px 160px 52px;gap:8px;align-items:center;}
 
-.item-line-total{font-size:14px;font-weight:700;color:var(--teal-dark);text-align:right;white-space:nowrap;}
-.del-item-btn{
-  background:none;border:none;cursor:pointer;color:var(--accent);
-  font-size:20px;padding:4px;border-radius:6px;line-height:1;
-  display:flex;align-items:center;justify-content:center;
+/* The product select */
+.item-prod-select{
+  width:100%;padding:10px 12px;border:2px solid var(--border);border-radius:var(--r);
+  font-size:15px;font-family:inherit;color:var(--text);background:#fff;
+  cursor:pointer;outline:none;appearance:auto;
 }
+.item-prod-select:focus{border-color:var(--teal);}
+
+/* Qty input inside item row */
+.item-qty{
+  width:100%;padding:10px 8px;border:2px solid var(--border);border-radius:var(--r);
+  font-size:15px;font-family:inherit;text-align:center;color:var(--text);background:#fff;outline:none;
+}
+.item-qty:focus{border-color:var(--teal);}
+
+/* Price display (read-only) */
+.item-price-display{
+  background:var(--teal-light);border:2px solid var(--border);border-radius:var(--r);
+  padding:10px 12px;font-size:15px;font-weight:700;color:var(--teal-dark);text-align:right;
+  white-space:nowrap;
+}
+.item-price-label{font-size:11px;color:var(--muted);margin-top:2px;text-align:center;}
+
+.del-item-btn{background:none;border:none;cursor:pointer;color:var(--accent);font-size:22px;padding:4px 6px;border-radius:6px;line-height:1;}
 .del-item-btn:hover{background:#fee2e2;}
 
-.add-item-btn{
-  margin-top:10px;background:var(--teal-light);border:2px dashed var(--teal);
-  color:var(--teal-dark);font-weight:700;font-size:15px;padding:11px;
-  border-radius:var(--r);cursor:pointer;width:100%;
-}
+/* Mobile card */
+.item-mobile{display:none;}
+.item-mob-select{width:100%;padding:13px 14px;border:2px solid var(--border);border-radius:var(--r);font-size:16px;font-family:inherit;color:var(--text);background:#fff;cursor:pointer;outline:none;margin-bottom:10px;}
+.item-mob-select:focus{border-color:var(--teal);}
+.item-mob-row{display:flex;gap:10px;align-items:center;}
+.item-mob-qty-wrap{flex:1;}
+.item-mob-qty-wrap label{font-size:13px;font-weight:700;color:var(--muted);margin-bottom:4px;display:block;}
+.item-mob-qty{width:100%;padding:12px;border:2px solid var(--border);border-radius:var(--r);font-size:18px;text-align:center;font-family:inherit;color:var(--text);background:#fff;outline:none;}
+.item-mob-qty:focus{border-color:var(--teal);}
+.item-mob-price{flex:1;background:var(--teal-light);border:2px solid var(--border);border-radius:var(--r);padding:12px;text-align:center;}
+.item-mob-price-val{font-size:17px;font-weight:700;color:var(--teal-dark);}
+.item-mob-price-lbl{font-size:11px;color:var(--muted);margin-top:2px;}
+.item-mob-total{background:var(--teal);color:#fff;border-radius:var(--r);padding:10px 14px;text-align:center;margin-top:10px;font-size:16px;font-weight:700;}
+.item-mob-footer{display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
+
+.add-item-btn{margin-top:10px;background:var(--teal-light);border:2px dashed var(--teal);color:var(--teal-dark);font-weight:700;font-size:16px;padding:12px;border-radius:var(--r);cursor:pointer;width:100%;}
 .add-item-btn:hover{background:#c8e8e8;}
 
-/* TOTALS */
+/* Totals */
 .totals-block{margin-top:14px;background:var(--teal-light);border-radius:var(--r);padding:14px 16px;border:1.5px solid var(--border);}
-.totals-row{display:flex;justify-content:space-between;font-size:15px;padding:4px 0;color:var(--muted);}
-.totals-row.grand{font-size:18px;font-weight:800;color:var(--teal-dark);border-top:2px solid var(--teal);margin-top:9px;padding-top:9px;}
+.tot-row{display:flex;justify-content:space-between;font-size:15px;padding:4px 0;color:var(--muted);}
+.tot-row.grand{font-size:19px;font-weight:800;color:var(--teal-dark);border-top:2px solid var(--teal);margin-top:9px;padding-top:9px;}
 
-/* ACTIONS */
+/* Actions */
 .actions{margin-top:22px;display:flex;gap:12px;}
 .btn{flex:1;padding:14px;border-radius:var(--r);font-size:16px;font-weight:700;cursor:pointer;border:none;}
 .btn-primary{background:var(--teal);color:#fff;}
@@ -234,28 +152,18 @@ textarea{resize:vertical;min-height:64px;}
 .btn-secondary{background:#fff;color:var(--teal-dark);border:2px solid var(--teal);}
 .btn-secondary:hover{background:var(--teal-light);}
 
-/* PREVIEW SIDE */
-.inv-preview-side{
-  background:#b8c8c8;padding:28px 20px;overflow-y:auto;
-  display:flex;flex-direction:column;align-items:center;
-}
+/* Preview */
+.inv-preview-side{background:#b8c8c8;padding:28px 20px;overflow-y:auto;display:flex;flex-direction:column;align-items:center;}
 .preview-label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#555;margin-bottom:14px;align-self:flex-start;}
-
-/* A4 preview */
 .a4-wrap{width:100%;max-width:620px;}
-.a4-sheet{
-  width:100%;aspect-ratio:1/1.4142;background:#fff;
-  box-shadow:0 6px 32px rgba(0,0,0,.2);border-radius:3px;overflow:hidden;
-  display:flex;flex-direction:column;font-family:'Segoe UI',system-ui,sans-serif;
-  font-size:clamp(7px,1.3vw,11px);
-}
+.a4-sheet{width:100%;aspect-ratio:1/1.4142;background:#fff;box-shadow:0 6px 32px rgba(0,0,0,.2);border-radius:3px;overflow:hidden;display:flex;flex-direction:column;font-family:'Segoe UI',system-ui,sans-serif;font-size:clamp(7px,1.3vw,11px);}
 .inv-hdr{display:flex;align-items:center;justify-content:space-between;padding:.9em 1.4em .7em;border-bottom:2px solid var(--teal);flex-shrink:0;}
-.inv-logo-box{background:var(--teal);padding:.55em 1em;border-radius:3px;white-space:nowrap;overflow:hidden;max-width:65%;}
+.inv-logo-box{background:var(--teal);padding:.55em 1em;border-radius:3px;white-space:nowrap;max-width:65%;overflow:hidden;}
 .inv-logo-txt{color:#fff;font-size:1.45em;font-weight:700;letter-spacing:.2em;white-space:nowrap;display:block;}
-.inv-word{font-size:1.8em;font-weight:800;color:var(--teal-dark);letter-spacing:.05em;white-space:nowrap;}
+.inv-word{font-size:1.8em;font-weight:800;color:var(--teal-dark);white-space:nowrap;}
 .inv-addr{padding:.4em 1.4em;font-size:.78em;color:var(--muted);line-height:1.5;border-bottom:1px solid var(--border);flex-shrink:0;}
 .inv-meta{display:grid;grid-template-columns:1fr 1fr;gap:1em;padding:.8em 1.4em;border-bottom:1px solid var(--border);flex-shrink:0;}
-.inv-ml{font-size:.72em;font-weight:700;color:var(--muted);margin-bottom:.2em;text-transform:uppercase;letter-spacing:.05em;}
+.inv-ml{font-size:.72em;font-weight:700;color:var(--muted);margin-bottom:.2em;text-transform:uppercase;}
 .inv-mv{font-size:.85em;color:var(--text);line-height:1.5;}
 .inv-mr{text-align:right;}
 .inv-tbl{width:100%;border-collapse:collapse;flex-shrink:0;}
@@ -276,99 +184,75 @@ textarea{resize:vertical;min-height:64px;}
 .inv-ty{text-align:center;padding:.5em 1.4em .6em;font-size:.75em;color:var(--muted);border-top:1px solid var(--border);flex-shrink:0;line-height:1.7;}
 .inv-serial{text-align:right;padding:.2em 1.4em .3em;font-size:.65em;color:#bbb;flex-shrink:0;}
 
-/* ══════════════════════════════
-   MOBILE  ≤ 720px
-══════════════════════════════ */
-@media(max-width:720px){
+/* ── MOBILE ── */
+@media(max-width:740px){
   .invoice-page{grid-template-columns:1fr;}
   .inv-form-side{border-right:none;border-bottom:2px solid var(--border);}
   .inv-preview-side{padding:20px 12px;}
   .a4-sheet{font-size:clamp(6px,2.8vw,10px);}
-
-  .items-table-head{display:none;}
-  .item-row{
-    display:block;padding:14px;border-bottom:1px solid var(--border);background:#fff;
-  }
-  .item-row:last-child{border-bottom:none;}
-  .item-mob-desc{margin-bottom:10px;}
-  .item-mob-desc input{
-    width:100%;border:2px solid var(--border);background:#fff;
-    padding:11px 13px;border-radius:var(--r);font-size:15px;
-  }
-  .item-mob-nums{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px;}
-  .item-mob-nums .field-grp input{font-size:16px;text-align:right;}
-  .item-mob-footer{display:flex;justify-content:space-between;align-items:center;}
-  .item-mob-total{font-size:16px;font-weight:700;color:var(--teal-dark);}
-
+  .items-thead{display:none;}
+  .item-desktop{display:none;}
+  .item-mobile{display:block;}
   .cat-form-row{grid-template-columns:1fr 1fr;gap:10px;}
-  .cat-form-row .field-grp:first-child{grid-column:1/-1;}
-  .cat-add-btn{grid-column:1/-1;height:auto;padding:13px;}
-
-  .product-table-head{grid-template-columns:30px 1fr 110px 80px;}
-  .product-table-head span:nth-child(5){display:none;}
-  .product-row{grid-template-columns:30px 1fr 110px 80px;}
-  .prod-actions{flex-direction:column;gap:4px;}
+  .cat-form-row .fgrp:first-child{grid-column:1/-1;}
+  .cat-add-btn{grid-column:1/-1;height:auto;padding:14px;}
+  .prod-tbl-head{grid-template-columns:30px 1fr 110px 90px;}
+  .prod-tbl-head span:nth-child(5){display:none;}
+  .prod-row{grid-template-columns:30px 1fr 110px 90px;}
+  .prod-acts{flex-direction:column;}
+  .tab-bar-title{font-size:14px;}
+  .tab-btn{padding:14px 12px;font-size:14px;}
 }
 </style>
 </head>
 <body>
 
-<!-- ════════════════════════════
-     LOCK SCREEN
-════════════════════════════ -->
+<!-- LOCK -->
 <div id="lockScreen">
   <div class="lock-card">
-    <div class="lock-logo">
-      <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-    </div>
+    <div class="lock-logo"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
     <div class="lock-title">Siva Sree Enterprises</div>
-    <div class="lock-sub">Enter your password to continue</div>
-    <label class="lock-label">Password</label>
-    <input class="lock-input" type="password" id="pwdInput" placeholder="••••••"
+    <div class="lock-sub">Enter your password to open the app</div>
+    <label class="lock-lbl">Password</label>
+    <input class="lock-inp" type="password" id="pwdInput" placeholder="••••••"
       onkeydown="if(event.key==='Enter')checkPwd()" autocomplete="off" autofocus/>
     <div class="lock-err" id="pwdErr"></div>
-    <button class="lock-btn" onclick="checkPwd()">🔓 &nbsp; Open App</button>
-    <div class="lock-hint">Tip: Password is case-sensitive</div>
+    <button class="lock-btn" onclick="checkPwd()">🔓 &nbsp;Open App</button>
+    <div class="lock-hint">Tip: Password is in CAPITAL LETTERS</div>
   </div>
 </div>
 
-<!-- ════════════════════════════
-     MAIN APP
-════════════════════════════ -->
+<!-- MAIN APP -->
 <div id="mainApp">
-
-  <!-- TAB BAR -->
   <div class="tab-bar">
     <span class="tab-bar-title">📄 Siva Sree Invoices</span>
-    <button class="tab-btn active" onclick="switchTab('invoice',this)">🧾 &nbsp;Create Invoice</button>
-    <button class="tab-btn" onclick="switchTab('catalog',this)">📦 &nbsp;Product Prices</button>
+    <button class="tab-btn active" onclick="switchTab('invoice',this)">🧾 Create Invoice</button>
+    <button class="tab-btn" onclick="switchTab('catalog',this)">📦 Product Prices</button>
   </div>
 
-  <!-- ══ INVOICE TAB ══ -->
+  <!-- INVOICE TAB -->
   <div id="tab-invoice" class="tab-content active">
     <div class="invoice-page">
-
-      <!-- FORM -->
       <div class="inv-form-side">
 
-        <div class="section-label">Your Business</div>
-        <div class="form-row single"><div><label>Company Name</label><input id="sellerName" value="Siva Sree Enterprises" oninput="render()"/></div></div>
-        <div class="form-row single"><div><label>Address</label><textarea id="sellerAddress" oninput="render()">No 3, First Floor, RagavendraColony, Brindavan Nagar Extension, Madambakkam, Chennai - 600126</textarea></div></div>
+        <div class="sec-lbl">Your Business</div>
+        <div class="form-row s"><div><label>Company Name</label><input id="sellerName" value="Siva Sree Enterprises" oninput="updatePreview()"/></div></div>
+        <div class="form-row s"><div><label>Address</label><textarea id="sellerAddress" oninput="updatePreview()">No 3, First Floor, RagavendraColony, Brindavan Nagar Extension, Madambakkam, Chennai - 600126</textarea></div></div>
         <div class="form-row">
-          <div><label>Phone</label><input id="sellerPhone" value="90256 03484" oninput="render()"/></div>
-          <div><label>Email</label><input id="sellerEmail" value="sivasree71@outlook.com" oninput="render()"/></div>
+          <div><label>Phone</label><input id="sellerPhone" value="90256 03484" oninput="updatePreview()"/></div>
+          <div><label>Email</label><input id="sellerEmail" value="sivasree71@outlook.com" oninput="updatePreview()"/></div>
         </div>
         <div class="form-row">
-          <div><label>Bank A/C No.</label><input id="bankAc" value="1113102100000569" oninput="render()"/></div>
-          <div><label>IFSC Code</label><input id="bankIfsc" value="PUNB0111310" oninput="render()"/></div>
+          <div><label>Bank A/C No.</label><input id="bankAc" value="1113102100000569" oninput="updatePreview()"/></div>
+          <div><label>IFSC Code</label><input id="bankIfsc" value="PUNB0111310" oninput="updatePreview()"/></div>
         </div>
 
-        <div class="section-label">Invoice Details</div>
-        <div class="form-row triple">
-          <div><label>Invoice No.</label><input id="invoiceNo" value="113" oninput="render()"/></div>
-          <div><label>Date</label><input type="date" id="invoiceDate" oninput="render()"/></div>
+        <div class="sec-lbl">Invoice Details</div>
+        <div class="form-row t">
+          <div><label>Invoice No.</label><input id="invoiceNo" value="113" oninput="updatePreview()"/></div>
+          <div><label>Date</label><input type="date" id="invoiceDate" oninput="updatePreview()"/></div>
           <div><label>Currency</label>
-            <select id="currency" onchange="render()">
+            <select id="currency" onchange="rebuildItemRows();updatePreview();">
               <option value="₹">₹ INR</option>
               <option value="$">$ USD</option>
               <option value="€">€ EUR</option>
@@ -376,29 +260,30 @@ textarea{resize:vertical;min-height:64px;}
           </div>
         </div>
         <div class="form-row">
-          <div><label>Tax Label</label><input id="taxLabel" value="Sales Tax" oninput="render()"/></div>
-          <div><label>Tax %</label><input type="number" id="taxRate" value="0" min="0" max="100" oninput="render()"/></div>
+          <div><label>Tax Label</label><input id="taxLabel" value="Sales Tax" oninput="updatePreview()"/></div>
+          <div><label>Tax %</label><input type="number" id="taxRate" value="0" min="0" max="100" oninput="updatePreview()"/></div>
         </div>
 
-        <div class="section-label">Customer (Bill To)</div>
-        <div class="form-row single"><div><label>Customer Name</label><input id="buyerName" value="Tiaano Vidyashrm" oninput="render()"/></div></div>
-        <div class="form-row single"><div><label>Customer Address</label><textarea id="buyerAddress" oninput="render()">#250, pushpagiri, sethupattu village, Manimangalam - 610301</textarea></div></div>
+        <div class="sec-lbl">Customer (Bill To)</div>
+        <div class="form-row s"><div><label>Customer Name</label><input id="buyerName" value="Tiaano Vidyashrm" oninput="updatePreview()"/></div></div>
+        <div class="form-row s"><div><label>Customer Address</label><textarea id="buyerAddress" oninput="updatePreview()">#250, pushpagiri, sethupattu village, Manimangalam - 610301</textarea></div></div>
 
-        <div class="section-label">Items / Products</div>
-        <div class="items-table-head">
-          <span>Product</span><span>Qty</span><span>Price</span><span>Total</span><span></span>
+        <div class="sec-lbl">Items / Products</div>
+        <!-- Desktop header -->
+        <div class="items-thead">
+          <span>Product</span><span style="text-align:center">Qty</span><span style="text-align:right">Unit Price → Total</span><span></span>
         </div>
-        <div class="items-table-body" id="itemsBody"></div>
+        <div class="items-body" id="itemsBody"></div>
         <button class="add-item-btn" onclick="addItem()">＋ &nbsp;Add Another Product</button>
 
         <div class="totals-block">
-          <div class="totals-row"><span>Subtotal</span><span id="sumSubtotal">₹ 0.00</span></div>
-          <div class="totals-row"><span id="taxLabelDisplay">Sales Tax (0%)</span><span id="sumTax">₹ 0.00</span></div>
-          <div class="totals-row grand"><span>Grand Total</span><span id="sumTotal">₹ 0.00</span></div>
+          <div class="tot-row"><span>Subtotal</span><span id="sumSubtotal">₹ 0.00</span></div>
+          <div class="tot-row"><span id="taxLabelDisplay">Sales Tax (0%)</span><span id="sumTax">₹ 0.00</span></div>
+          <div class="tot-row grand"><span>Grand Total</span><span id="sumTotal">₹ 0.00</span></div>
         </div>
 
-        <div class="section-label">Notes / Terms</div>
-        <div class="form-row single"><div><textarea id="notes" placeholder="e.g. Payment due within 30 days" rows="2" oninput="render()"></textarea></div></div>
+        <div class="sec-lbl">Notes / Terms</div>
+        <div class="form-row s"><div><textarea id="notes" placeholder="e.g. Payment due within 30 days" rows="2" oninput="updatePreview()"></textarea></div></div>
 
         <div class="actions">
           <button class="btn btn-secondary" onclick="resetForm()">🔄 &nbsp;Reset</button>
@@ -411,96 +296,76 @@ textarea{resize:vertical;min-height:64px;}
         <div class="preview-label">Live Preview — A4</div>
         <div class="a4-wrap"><div class="a4-sheet" id="invoicePreview"></div></div>
       </div>
-
     </div>
-  </div><!-- #tab-invoice -->
+  </div>
 
-  <!-- ══ CATALOG TAB ══ -->
+  <!-- CATALOG TAB -->
   <div id="tab-catalog" class="tab-content">
     <div class="catalog-page">
       <div class="page-heading">📦 Product Price List</div>
-      <div class="page-sub">Add your products and their prices here. When creating an invoice, type a product name and it will auto-fill the price.</div>
-
-      <!-- Add form -->
+      <div class="page-sub">Add all your products and prices here. When creating an invoice, just select the product — the price fills in automatically.</div>
       <div class="add-product-card">
-        <h3>➕ &nbsp;Add New Product</h3>
+        <h3>➕ Add New Product</h3>
         <div class="cat-form-row">
-          <div class="field-grp">
-            <label>Product Name</label>
-            <input type="text" id="newProdName" placeholder="e.g. Darmona Premium Tea 500g" onkeydown="if(event.key==='Enter')addProduct()"/>
-          </div>
-          <div class="field-grp">
-            <label>Unit Price (₹)</label>
-            <input type="number" id="newProdPrice" placeholder="250" min="0" step="0.01" onkeydown="if(event.key==='Enter')addProduct()"/>
-          </div>
-          <div class="field-grp">
-            <label>Unit (optional)</label>
-            <input type="text" id="newProdUnit" placeholder="e.g. 500g, kg, pcs" onkeydown="if(event.key==='Enter')addProduct()"/>
-          </div>
-          <div class="field-grp">
-            <label>&nbsp;</label>
-            <button class="cat-add-btn" onclick="addProduct()">Save Product</button>
-          </div>
+          <div class="fgrp"><label>Product Name</label><input type="text" id="newProdName" placeholder="e.g. Darmona Premium Tea 500g" onkeydown="if(event.key==='Enter')addProduct()"/></div>
+          <div class="fgrp"><label>Unit Price (₹)</label><input type="number" id="newProdPrice" placeholder="250" min="0" step="0.01" onkeydown="if(event.key==='Enter')addProduct()"/></div>
+          <div class="fgrp"><label>Unit (optional)</label><input type="text" id="newProdUnit" placeholder="500g / kg / pcs" onkeydown="if(event.key==='Enter')addProduct()"/></div>
+          <div class="fgrp"><label>&nbsp;</label><button class="cat-add-btn" onclick="addProduct()">💾 Save Product</button></div>
         </div>
       </div>
-
-      <!-- Product list -->
-      <div class="product-table-wrap">
-        <div class="product-table-head">
-          <span>#</span><span>Product Name</span><span>Unit</span><span>Unit Price</span><span>Actions</span>
-        </div>
+      <div class="prod-tbl-wrap">
+        <div class="prod-tbl-head"><span>#</span><span>Product Name</span><span>Unit</span><span>Unit Price</span><span>Actions</span></div>
         <div id="productList"></div>
       </div>
     </div>
-  </div><!-- #tab-catalog -->
-
-</div><!-- #mainApp -->
+  </div>
+</div>
 
 <script>
-/* ════════════════════════
-   PASSWORD
-════════════════════════ */
-const PASS = 'KANNAN';
-let attempts = 0;
+/* ── PASSWORD ── */
+const PASS='KANNAN';
+let attempts=0;
 function checkPwd(){
-  const val = document.getElementById('pwdInput').value;
-  if(val === PASS){
+  if(document.getElementById('pwdInput').value===PASS){
     document.getElementById('lockScreen').style.display='none';
     document.getElementById('mainApp').style.display='block';
-    render();
+    loadProducts();
+    rebuildItemRows();
+    updatePreview();
   } else {
     attempts++;
-    const err = document.getElementById('pwdErr');
-    if(attempts>=3) err.textContent = '❌ Wrong password. Hint: all capital letters.';
-    else err.textContent = '❌ Incorrect password. Please try again.';
+    document.getElementById('pwdErr').textContent=attempts>=3
+      ?'❌ Wrong. Hint: all CAPITAL LETTERS, no spaces.'
+      :'❌ Incorrect password. Try again.';
     document.getElementById('pwdInput').value='';
     document.getElementById('pwdInput').focus();
   }
 }
 
-/* ════════════════════════
-   TABS
-════════════════════════ */
-function switchTab(name, btn){
+/* ── TABS ── */
+function switchTab(name,btn){
   document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   btn.classList.add('active');
+  if(name==='catalog') renderCatalog();
 }
 
-/* ════════════════════════
-   PRODUCT CATALOG
-════════════════════════ */
-let products = [
-  {id:1, name:'Darmona Premium Tea 500 Gram', price:250, unit:'500g'},
-];
-let nextProdId = 2;
+/* ── HELPERS ── */
+function v(id){return document.getElementById(id)?.value||'';}
+function fmt(n){return parseFloat(n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
+const mob=()=>window.innerWidth<=740;
 
-function saveProducts(){ try{localStorage.setItem('ssCatalog',JSON.stringify(products));}catch(e){} }
+/* ── PRODUCT CATALOG ── */
+let products=[{id:1,name:'Darmona Premium Tea 500 Gram',price:250,unit:'500g'}];
+let nextProdId=2;
+
+function saveProducts(){try{localStorage.setItem('ssCatalog',JSON.stringify(products));}catch(e){}}
 function loadProducts(){
   try{
     const s=localStorage.getItem('ssCatalog');
-    if(s){ products=JSON.parse(s); nextProdId=Math.max(...products.map(p=>p.id),1)+1; }
+    if(s){products=JSON.parse(s);nextProdId=Math.max(...products.map(p=>p.id),0)+1;}
   }catch(e){}
 }
 
@@ -508,178 +373,259 @@ function addProduct(){
   const name=(document.getElementById('newProdName').value||'').trim();
   const price=parseFloat(document.getElementById('newProdPrice').value)||0;
   const unit=(document.getElementById('newProdUnit').value||'').trim();
-  if(!name){ alert('Please enter a product name.'); return; }
-  if(price<=0){ alert('Please enter a valid price.'); return; }
-  products.push({id:nextProdId++, name, price, unit});
+  if(!name){alert('Please enter a product name.');return;}
+  if(price<=0){alert('Please enter a valid price.');return;}
+  products.push({id:nextProdId++,name,price,unit});
   saveProducts();
   document.getElementById('newProdName').value='';
   document.getElementById('newProdPrice').value='';
   document.getElementById('newProdUnit').value='';
   renderCatalog();
+  // rebuild item rows so new product appears in selects
+  rebuildItemRows();
+  updatePreview();
   document.getElementById('newProdName').focus();
 }
 
 function deleteProduct(id){
-  if(!confirm('Remove this product?')) return;
+  if(!confirm('Remove this product from the list?'))return;
   products=products.filter(p=>p.id!==id);
   saveProducts();
   renderCatalog();
+  rebuildItemRows();
+  updatePreview();
 }
 
 function editProduct(id){
   const p=products.find(x=>x.id===id);
-  if(!p) return;
+  if(!p)return;
   const newName=prompt('Product name:',p.name);
-  if(newName===null) return;
-  const newPrice=parseFloat(prompt('Unit price (₹):',p.price));
-  if(isNaN(newPrice)||newPrice<=0){ alert('Invalid price'); return; }
-  const newUnit=prompt('Unit (e.g. 500g, kg):',p.unit)||'';
-  p.name=newName.trim();
-  p.price=newPrice;
-  p.unit=newUnit.trim();
+  if(newName===null)return;
+  if(!newName.trim()){alert('Name cannot be empty.');return;}
+  const newPriceStr=prompt('Unit price (₹):',p.price);
+  if(newPriceStr===null)return;
+  const newPrice=parseFloat(newPriceStr);
+  if(isNaN(newPrice)||newPrice<=0){alert('Please enter a valid price.');return;}
+  const newUnit=prompt('Unit (e.g. 500g, kg, pcs):',p.unit)||'';
+  p.name=newName.trim();p.price=newPrice;p.unit=newUnit.trim();
   saveProducts();
   renderCatalog();
+  rebuildItemRows();
+  updatePreview();
 }
 
 function renderCatalog(){
   const list=document.getElementById('productList');
+  if(!list)return;
   if(!products.length){
     list.innerHTML='<div class="empty-catalog">No products yet. Add your first product above ☝️</div>';
     return;
   }
-  const cur=v('currency')||'₹';
   list.innerHTML=products.map((p,i)=>`
-    <div class="product-row">
+    <div class="prod-row">
       <span class="prod-num">${i+1}</span>
-      <span class="prod-name">${escHtml(p.name)}</span>
-      <span class="prod-unit">${escHtml(p.unit||'—')}</span>
-      <span class="prod-price">${cur} ${fmt(p.price)}</span>
-      <div class="prod-actions">
+      <span class="prod-name-cell">${esc(p.name)}</span>
+      <span class="prod-unit-cell">${esc(p.unit||'—')}</span>
+      <span class="prod-price-cell">₹ ${fmt(p.price)}</span>
+      <div class="prod-acts">
         <button class="prod-edit-btn" onclick="editProduct(${p.id})">✏️ Edit</button>
         <button class="prod-del-btn" onclick="deleteProduct(${p.id})">🗑 Delete</button>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
-/* ════════════════════════
-   INVOICE ITEMS
-════════════════════════ */
-let items=[{desc:'Darmona Premium Tea 500 Gram', qty:19, price:250}];
+/* ── INVOICE ITEMS ── */
+let items=[{prodId:1,qty:19}];
 document.getElementById('invoiceDate').value=new Date().toISOString().split('T')[0];
 
-function v(id){return document.getElementById(id)?.value||'';}
-function fmt(n){return parseFloat(n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});}
-function escHtml(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
+function getItemProduct(item){
+  return products.find(p=>p.id===item.prodId)||null;
+}
+function getItemPrice(item){
+  const p=getItemProduct(item);return p?p.price:0;
+}
+function getItemDesc(item){
+  const p=getItemProduct(item);return p?p.name:'';
+}
+function getItemTotal(item){
+  return (parseFloat(item.qty)||0)*getItemPrice(item);
+}
 
 function calcTotals(){
   const cur=v('currency'),rate=parseFloat(v('taxRate'))||0;
   let sub=0;
-  items.forEach(it=>sub+=(parseFloat(it.qty)||0)*(parseFloat(it.price)||0));
-  return{cur,sub,tax:sub*rate/100,total:sub+sub*rate/100,rate};
+  items.forEach(it=>sub+=getItemTotal(it));
+  return{cur,sub,tax:sub*rate/100,total:sub*(1+rate/100),rate};
 }
 
-const isMobile=()=>window.innerWidth<=720;
+/* Build product options HTML */
+function prodOptions(selectedId){
+  if(!products.length) return '<option value="">— No products yet. Go to Product Prices tab —</option>';
+  return '<option value="">— Select a product —</option>'+
+    products.map(p=>`<option value="${p.id}"${p.id===selectedId?' selected':''}>${esc(p.name)}${p.unit?' ('+esc(p.unit)+')':''}</option>`).join('');
+}
 
-function renderItemRows(){
+/*
+  rebuildItemRows: called when structure changes (add/remove item, product list changes).
+  We fully rebuild the DOM rows here.
+  Qty inputs use onchange (fires on blur/enter) not oninput,
+  so the DOM is NOT rebuilt while the user types — fixing mobile keyboard issue.
+*/
+function rebuildItemRows(){
   const body=document.getElementById('itemsBody');
-  const cur=v('currency');
+  if(!body)return;
+  const cur=v('currency')||'₹';
   body.innerHTML='';
+
   items.forEach((it,i)=>{
-    const lt=(parseFloat(it.qty)||0)*(parseFloat(it.price)||0);
+    const price=getItemPrice(it);
+    const total=getItemTotal(it);
     const row=document.createElement('div');
     row.className='item-row';
+    row.id=`irow_${i}`;
 
-    if(isMobile()){
+    if(mob()){
+      /* ── MOBILE CARD ── */
       row.innerHTML=`
-        <div class="item-mob-desc">
-          <div class="field-grp"><label>Product Name</label>
-            <div class="item-desc-wrap" style="position:relative">
-              <input id="idesc_${i}" placeholder="Type product name…" value="${escHtml(it.desc)}"
-                oninput="items[${i}].desc=this.value;autoFillPrice(${i});filterDropdown(${i});render()"
-                onfocus="filterDropdown(${i})" onblur="setTimeout(()=>closeDropdown(${i}),180)" autocomplete="off"/>
-              <div class="prod-dropdown" id="dd_${i}"></div>
+        <div class="item-mobile">
+          <select class="item-mob-select" onchange="onSelectChange(${i},this.value)">
+            ${prodOptions(it.prodId)}
+          </select>
+          <div class="item-mob-row">
+            <div class="item-mob-qty-wrap">
+              <label>Quantity</label>
+              <input class="item-mob-qty" type="number" min="0" value="${it.qty}"
+                onchange="onQtyChange(${i},this.value)"
+                oninput="updateRowTotal(${i})"/>
+            </div>
+            <div class="item-mob-price">
+              <div class="item-mob-price-val" id="mprice_${i}">${cur} ${fmt(price)}</div>
+              <div class="item-mob-price-lbl">Unit Price</div>
             </div>
           </div>
-        </div>
-        <div class="item-mob-nums">
-          <div class="field-grp"><label>Quantity</label>
-            <input type="number" min="0" value="${it.qty}" oninput="items[${i}].qty=this.value;render()"/>
+          <div class="item-mob-total" id="mtotal_${i}">Total: ${cur} ${fmt(total)}</div>
+          <div class="item-mob-footer">
+            <span style="font-size:12px;color:var(--muted)">Row ${i+1}</span>
+            <button class="del-item-btn" onclick="removeItem(${i})">✕ Remove</button>
           </div>
-          <div class="field-grp"><label>Unit Price (${cur})</label>
-            <input type="number" min="0" step="0.01" value="${it.price}" oninput="items[${i}].price=this.value;render()"/>
-          </div>
-        </div>
-        <div class="item-mob-footer">
-          <span class="item-mob-total">Total: ${cur} ${fmt(lt)}</span>
-          <button class="del-item-btn" onclick="removeItem(${i})" title="Remove">✕</button>
         </div>`;
     } else {
+      /* ── DESKTOP ROW ── */
       row.innerHTML=`
-        <div class="item-desc-wrap">
-          <input id="idesc_${i}" placeholder="Type or pick product…" value="${escHtml(it.desc)}"
-            oninput="items[${i}].desc=this.value;autoFillPrice(${i});filterDropdown(${i});render()"
-            onfocus="filterDropdown(${i})" onblur="setTimeout(()=>closeDropdown(${i}),180)" autocomplete="off"/>
-          <div class="prod-dropdown" id="dd_${i}"></div>
-        </div>
-        <input type="number" min="0" value="${it.qty}" oninput="items[${i}].qty=this.value;render()"/>
-        <input type="number" min="0" step="0.01" value="${it.price}" id="iprice_${i}" oninput="items[${i}].price=this.value;render()"/>
-        <span class="item-line-total">${cur} ${fmt(lt)}</span>
-        <button class="del-item-btn" onclick="removeItem(${i})" title="Remove">✕</button>`;
+        <div class="item-desktop">
+          <select class="item-prod-select" onchange="onSelectChange(${i},this.value)">
+            ${prodOptions(it.prodId)}
+          </select>
+          <input class="item-qty" type="number" min="0" value="${it.qty}"
+            onchange="onQtyChange(${i},this.value)"
+            oninput="updateRowTotal(${i})"/>
+          <div class="item-price-display" id="dprice_${i}">
+            ${cur} ${fmt(price)}&nbsp;→&nbsp;<span id="dtotal_${i}" style="color:#fff;background:var(--teal);padding:2px 7px;border-radius:5px">${cur} ${fmt(total)}</span>
+          </div>
+          <button class="del-item-btn" onclick="removeItem(${i})">✕</button>
+        </div>`;
     }
     body.appendChild(row);
   });
 }
 
-function filterDropdown(i){
-  const dd=document.getElementById(`dd_${i}`);
-  if(!dd) return;
-  const q=(items[i].desc||'').toLowerCase();
-  const matches=products.filter(p=>p.name.toLowerCase().includes(q));
-  if(!matches.length){
-    dd.innerHTML='<div class="prod-dd-none">No matching products</div>';
+/* Called when user picks a product from the select */
+function onSelectChange(i, val){
+  items[i].prodId = val ? parseInt(val) : null;
+  // update the price display without rebuilding whole list
+  const cur=v('currency')||'₹';
+  const price=getItemPrice(items[i]);
+  const qty=parseFloat(items[i].qty)||0;
+  const total=qty*price;
+  if(mob()){
+    const pe=document.getElementById(`mprice_${i}`);
+    const te=document.getElementById(`mtotal_${i}`);
+    if(pe) pe.textContent=`${cur} ${fmt(price)}`;
+    if(te) te.textContent=`Total: ${cur} ${fmt(total)}`;
   } else {
-    dd.innerHTML=matches.map(p=>`
-      <div class="prod-dd-item" onmousedown="pickProduct(${i},${p.id})">
-        <span class="prod-dd-name">${escHtml(p.name)}${p.unit?' <small style=color:#aaa>('+escHtml(p.unit)+')</small>':''}</span>
-        <span class="prod-dd-price">${v('currency')||'₹'} ${fmt(p.price)}</span>
-      </div>`).join('');
+    const de=document.getElementById(`dprice_${i}`);
+    const dte=document.getElementById(`dtotal_${i}`);
+    if(de && dte){
+      // update unit price display
+      de.childNodes[0].textContent=`${cur} ${fmt(price)} → `;
+      dte.textContent=`${cur} ${fmt(total)}`;
+    }
   }
-  dd.classList.add('open');
+  updatePreview();
 }
 
-function closeDropdown(i){
-  const dd=document.getElementById(`dd_${i}`);
-  if(dd) dd.classList.remove('open');
+/* Called when qty changes (onchange = blur/enter, safe for mobile) */
+function onQtyChange(i, val){
+  items[i].qty = parseFloat(val)||0;
+  updateRowTotal(i);
+  updatePreview();
 }
 
-function pickProduct(i,prodId){
-  const p=products.find(x=>x.id===prodId);
-  if(!p) return;
-  items[i].desc=p.name;
-  items[i].price=p.price;
-  render();
-  closeDropdown(i);
+/* Update just the total display of a row (called during oninput for live feel) */
+function updateRowTotal(i){
+  const cur=v('currency')||'₹';
+  // read qty live from DOM
+  const qtyEl = mob()
+    ? document.querySelector(`#irow_${i} .item-mob-qty`)
+    : document.querySelector(`#irow_${i} .item-qty`);
+  const qty = qtyEl ? parseFloat(qtyEl.value)||0 : parseFloat(items[i].qty)||0;
+  const price = getItemPrice(items[i]);
+  const total = qty * price;
+
+  if(mob()){
+    const te=document.getElementById(`mtotal_${i}`);
+    if(te) te.textContent=`Total: ${cur} ${fmt(total)}`;
+  } else {
+    const dte=document.getElementById(`dtotal_${i}`);
+    if(dte) dte.textContent=`${cur} ${fmt(total)}`;
+  }
+  // update running totals panel live
+  const tmpItems=items.map((it,idx)=>({
+    ...it,
+    qty: idx===i ? qty : it.qty
+  }));
+  const rate=parseFloat(v('taxRate'))||0;
+  let sub=0;
+  tmpItems.forEach(it=>sub+=(parseFloat(it.qty)||0)*getItemPrice(it));
+  const taxLabel=v('taxLabel')||'Tax';
+  document.getElementById('sumSubtotal').textContent=`${cur} ${fmt(sub)}`;
+  document.getElementById('taxLabelDisplay').textContent=`${taxLabel} (${rate}%)`;
+  document.getElementById('sumTax').textContent=`${cur} ${fmt(sub*rate/100)}`;
+  document.getElementById('sumTotal').textContent=`${cur} ${fmt(sub*(1+rate/100))}`;
 }
 
-function autoFillPrice(i){
-  const q=(items[i].desc||'').toLowerCase();
-  const exact=products.find(p=>p.name.toLowerCase()===q);
-  if(exact){ items[i].price=exact.price; }
+function addItem(){
+  items.push({prodId:null,qty:1});
+  rebuildItemRows();
+  updatePreview();
 }
 
-function addItem(){items.push({desc:'',qty:1,price:0});render();}
-function removeItem(i){if(items.length===1){items[0]={desc:'',qty:1,price:0};}else{items.splice(i,1);}render();}
+function removeItem(i){
+  if(items.length===1){items[0]={prodId:null,qty:1};}
+  else{items.splice(i,1);}
+  rebuildItemRows();
+  updatePreview();
+}
 
-function render(){
-  renderItemRows();
+/* Sync qty from DOM back to items[] before PDF/preview */
+function syncQtyFromDOM(){
+  items.forEach((it,i)=>{
+    const el = mob()
+      ? document.querySelector(`#irow_${i} .item-mob-qty`)
+      : document.querySelector(`#irow_${i} .item-qty`);
+    if(el) it.qty = parseFloat(el.value)||0;
+  });
+}
+
+/* updatePreview: updates totals panel + preview. Does NOT touch item rows. */
+function updatePreview(){
+  syncQtyFromDOM();
   const t=calcTotals();
   const taxLabel=v('taxLabel')||'Tax';
   document.getElementById('sumSubtotal').textContent=`${t.cur} ${fmt(t.sub)}`;
   document.getElementById('taxLabelDisplay').textContent=`${taxLabel} (${t.rate}%)`;
   document.getElementById('sumTax').textContent=`${t.cur} ${fmt(t.tax)}`;
   document.getElementById('sumTotal').textContent=`${t.cur} ${fmt(t.total)}`;
-  renderCatalog();
   renderPreview(t,taxLabel);
 }
 
@@ -691,29 +637,24 @@ function renderPreview(t,taxLabel){
 
   let rows='';
   items.forEach((it,i)=>{
-    const lt=(parseFloat(it.qty)||0)*(parseFloat(it.price)||0);
-    rows+=`<tr><td>${i+1}. ${escHtml(it.desc)}</td><td>${it.qty}</td><td>${t.cur}&nbsp;${fmt(it.price)}</td><td>${t.cur}&nbsp;${fmt(lt)}</td></tr>`;
+    const lt=getItemTotal(it);
+    rows+=`<tr><td>${i+1}. ${esc(getItemDesc(it))}</td><td>${it.qty}</td><td>${t.cur}&nbsp;${fmt(getItemPrice(it))}</td><td>${t.cur}&nbsp;${fmt(lt)}</td></tr>`;
   });
   const empties=Math.max(0,7-items.length);
   for(let e=0;e<empties;e++) rows+=`<tr class="erow"><td></td><td></td><td></td><td></td></tr>`;
-
-  const noteHtml=v('notes')?`<div style="padding:.35em 1.4em;font-size:.75em;color:#666;border-top:1px solid #e5e7eb"><strong>Notes:</strong> ${escHtml(v('notes'))}</div>`:'';
+  const noteHtml=v('notes')?`<div style="padding:.35em 1.4em;font-size:.75em;color:#666;border-top:1px solid #e5e7eb"><strong>Notes:</strong> ${esc(v('notes'))}</div>`:'';
 
   document.getElementById('invoicePreview').innerHTML=`
     <div class="inv-hdr">
-      <div class="inv-logo-box"><span class="inv-logo-txt">${escHtml(v('sellerName')||'Company')}</span></div>
+      <div class="inv-logo-box"><span class="inv-logo-txt">${esc(v('sellerName')||'Company')}</span></div>
       <div class="inv-word">Invoice</div>
     </div>
     <div class="inv-addr">${sellerLines}</div>
     <div class="inv-meta">
-      <div>
-        <div class="inv-ml">Buyer</div>
-        <div class="inv-mv"><strong>${escHtml(v('buyerName')||'—')}</strong><br>${buyerLines}</div>
-      </div>
+      <div><div class="inv-ml">Buyer</div><div class="inv-mv"><strong>${esc(v('buyerName')||'—')}</strong><br>${buyerLines}</div></div>
       <div class="inv-mr">
         <div class="inv-ml">Date</div><div class="inv-mv">${dateStr}</div>
-        <div class="inv-ml" style="margin-top:.5em">Invoice #</div>
-        <div class="inv-mv"><strong>${serialNo}</strong></div>
+        <div class="inv-ml" style="margin-top:.5em">Invoice #</div><div class="inv-mv"><strong>${serialNo}</strong></div>
       </div>
     </div>
     <table class="inv-tbl">
@@ -722,36 +663,36 @@ function renderPreview(t,taxLabel){
     </table>
     <div class="inv-ftr">
       <div class="inv-bank">
-        ${v('bankAc')?`<div><strong>A/C :</strong> ${escHtml(v('bankAc'))}</div>`:''}
-        ${v('bankIfsc')?`<div><strong>IFSC :</strong> ${escHtml(v('bankIfsc'))}</div>`:''}
+        ${v('bankAc')?`<div><strong>A/C :</strong> ${esc(v('bankAc'))}</div>`:''}
+        ${v('bankIfsc')?`<div><strong>IFSC :</strong> ${esc(v('bankIfsc'))}</div>`:''}
       </div>
       <div>
         <div class="inv-tot-row"><span>Subtotal</span><span>${t.cur} ${fmt(t.sub)}</span></div>
-        <div class="inv-tot-row"><span>${escHtml(taxLabel)} (${t.rate}%)</span><span>${t.rate>0?`${t.cur} ${fmt(t.tax)}`:'—'}</span></div>
+        <div class="inv-tot-row"><span>${esc(taxLabel)} (${t.rate}%)</span><span>${t.rate>0?`${t.cur} ${fmt(t.tax)}`:'—'}</span></div>
         <div class="inv-tot-grand"><span>Total</span><span>${t.cur} ${fmt(t.total)}</span></div>
       </div>
     </div>
     ${noteHtml}
-    <div class="inv-ty">Thank you for your business!<br><strong>${escHtml(v('sellerPhone'))}</strong>${v('sellerPhone')&&v('sellerEmail')?' &nbsp;||&nbsp; ':''}${escHtml(v('sellerEmail'))}</div>
+    <div class="inv-ty">Thank you for your business!<br><strong>${esc(v('sellerPhone'))}</strong>${v('sellerPhone')&&v('sellerEmail')?' &nbsp;||&nbsp; ':''}${esc(v('sellerEmail'))}</div>
     <div class="inv-serial">${serialNo}</div>`;
 }
 
 function resetForm(){
-  if(!confirm('Clear all invoice fields and start fresh?')) return;
-  items=[{desc:'',qty:1,price:0}];
+  if(!confirm('Clear all invoice fields and start a new invoice?'))return;
+  items=[{prodId:null,qty:1}];
   ['buyerName','buyerAddress','taxRate','notes'].forEach(id=>{
     const el=document.getElementById(id);
     if(el) el.value=id==='taxRate'?'0':'';
   });
   document.getElementById('invoiceNo').value=String(parseInt(v('invoiceNo')||'1')+1);
   document.getElementById('invoiceDate').value=new Date().toISOString().split('T')[0];
-  render();
+  rebuildItemRows();
+  updatePreview();
 }
 
-/* ════════════════════════
-   PDF
-════════════════════════ */
+/* ── PDF ── */
 function downloadPDF(){
+  syncQtyFromDOM();
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF({unit:'mm',format:'a4'});
   const t=calcTotals(),cur=t.cur,taxLabel=v('taxLabel')||'Tax';
@@ -761,8 +702,8 @@ function downloadPDF(){
 
   doc.setFillColor(45,107,107);doc.rect(0,0,W,26,'F');
   doc.setFont('helvetica','bold');
-  let fs=14;doc.setFontSize(fs);
   const coName=v('sellerName')||'Company';
+  let fs=14;doc.setFontSize(fs);
   while(doc.getTextWidth(coName)>W*0.55&&fs>8){fs--;doc.setFontSize(fs);}
   doc.setTextColor(255,255,255);doc.text(coName,M,16);
   doc.setFillColor(255,255,255);doc.roundedRect(W-54,4,38,18,2,2,'F');
@@ -790,8 +731,8 @@ function downloadPDF(){
 
   const thead=[['S.No','Description','Qty',`Unit Price (${cur})`,`Total (${cur})`]];
   const tbody=items.map((it,i)=>[
-    String(i+1),it.desc||'',String(parseFloat(it.qty)||0),
-    fmt(it.price),fmt((parseFloat(it.qty)||0)*(parseFloat(it.price)||0))
+    String(i+1),getItemDesc(it),String(parseFloat(it.qty)||0),
+    fmt(getItemPrice(it)),fmt(getItemTotal(it))
   ]);
   while(tbody.length<8)tbody.push(['','','','','']);
 
@@ -834,12 +775,7 @@ function downloadPDF(){
   doc.save(`${serialNo}_${(v('buyerName')||'invoice').replace(/\s+/g,'_')}.pdf`);
 }
 
-/* ════════════════════════
-   INIT
-════════════════════════ */
-window.addEventListener('resize',render);
-loadProducts();
-// render() will be called after unlock
+window.addEventListener('resize',()=>{rebuildItemRows();updatePreview();});
 </script>
 </body>
 </html>
