@@ -53,22 +53,45 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .cat-add-btn{padding:12px 20px;background:var(--teal);color:#fff;border:none;border-radius:var(--r);font-size:15px;font-weight:700;cursor:pointer;white-space:nowrap;height:50px;}
 .cat-add-btn:hover{background:var(--teal-dark);}
 .prod-tbl-wrap{background:#fff;border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;border:1.5px solid var(--border);}
-.prod-tbl-head{display:grid;grid-template-columns:40px 1fr 120px 140px 120px;background:var(--teal);color:#fff;font-size:13px;font-weight:700;text-transform:uppercase;padding:12px 16px;gap:10px;}
-.prod-tbl-head span:nth-child(3),.prod-tbl-head span:nth-child(4){text-align:right;}
+
+/* Desktop table layout */
+.prod-tbl-head{display:grid;grid-template-columns:40px 1fr 100px 120px 160px;background:var(--teal);color:#fff;font-size:13px;font-weight:700;text-transform:uppercase;padding:12px 16px;gap:10px;}
+.prod-tbl-head span:nth-child(4){text-align:right;}
 .prod-tbl-head span:nth-child(5){text-align:center;}
-.prod-row{display:grid;grid-template-columns:40px 1fr 120px 140px 120px;padding:12px 16px;gap:10px;align-items:center;border-bottom:1px solid #e4eeee;}
+.prod-row{display:grid;grid-template-columns:40px 1fr 100px 120px 160px;padding:13px 16px;gap:10px;align-items:center;border-bottom:1px solid #e4eeee;}
 .prod-row:last-child{border-bottom:none;}
 .prod-row:hover{background:#f4fbfb;}
-.prod-num{font-size:13px;color:var(--muted);font-weight:700;}
+.prod-num{font-size:13px;color:var(--muted);font-weight:700;text-align:center;}
 .prod-name-cell{font-size:15px;font-weight:600;}
-.prod-unit-cell{font-size:14px;color:var(--muted);text-align:right;}
+.prod-unit-cell{font-size:14px;color:var(--muted);text-align:center;}
 .prod-price-cell{font-size:16px;font-weight:700;color:var(--teal-dark);text-align:right;}
-.prod-acts{display:flex;gap:6px;justify-content:center;}
-.prod-edit-btn{background:var(--teal-light);border:none;color:var(--teal-dark);padding:7px 12px;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;}
-.prod-edit-btn:hover{background:#c0e8e8;}
-.prod-del-btn{background:#fee2e2;border:none;color:var(--accent);padding:7px 12px;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;}
-.prod-del-btn:hover{background:#fcc;}
+.prod-acts{display:flex;gap:8px;justify-content:center;}
+.prod-edit-btn{background:var(--teal-light);border:2px solid var(--teal);color:var(--teal-dark);padding:8px 14px;border-radius:6px;font-size:14px;font-weight:700;cursor:pointer;min-width:64px;}
+.prod-edit-btn:hover,.prod-edit-btn:active{background:#c0e8e8;}
+.prod-del-btn{background:#fee2e2;border:2px solid #f5a0a0;color:var(--accent);padding:8px 14px;border-radius:6px;font-size:14px;font-weight:700;cursor:pointer;min-width:72px;}
+.prod-del-btn:hover,.prod-del-btn:active{background:#fcc;}
 .empty-catalog{text-align:center;padding:48px;color:var(--muted);font-size:16px;}
+
+/* Mobile card layout for catalog */
+.prod-card{display:none;}
+@media(max-width:740px){
+  .prod-tbl-head{display:none;}
+  .prod-row{display:none;}
+  .prod-card{
+    display:flex;flex-direction:column;gap:6px;
+    padding:16px;border-bottom:1px solid #e4eeee;background:#fff;
+  }
+  .prod-card:last-child{border-bottom:none;}
+  .prod-card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+  .prod-card-name{font-size:16px;font-weight:700;color:var(--text);flex:1;}
+  .prod-card-num{font-size:12px;font-weight:700;color:#fff;background:var(--teal);border-radius:20px;padding:2px 8px;white-space:nowrap;align-self:flex-start;}
+  .prod-card-mid{display:flex;justify-content:space-between;align-items:center;}
+  .prod-card-unit{font-size:13px;color:var(--muted);}
+  .prod-card-price{font-size:18px;font-weight:800;color:var(--teal-dark);}
+  .prod-card-btns{display:flex;gap:10px;margin-top:4px;}
+  .prod-card-btns .prod-edit-btn{flex:1;padding:12px;font-size:15px;text-align:center;}
+  .prod-card-btns .prod-del-btn{flex:1;padding:12px;font-size:15px;text-align:center;}
+}
 
 /* ── INVOICE PAGE ── */
 .invoice-page{display:grid;grid-template-columns:500px 1fr;min-height:calc(100vh - 52px);}
@@ -184,6 +207,45 @@ textarea{resize:vertical;min-height:64px;}
 .inv-ty{text-align:center;padding:.5em 1.4em .6em;font-size:.75em;color:var(--muted);border-top:1px solid var(--border);flex-shrink:0;line-height:1.7;}
 .inv-serial{text-align:right;padding:.2em 1.4em .3em;font-size:.65em;color:#bbb;flex-shrink:0;}
 
+/* ── MODAL ── */
+.modal-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);
+  z-index:9000;align-items:center;justify-content:center;padding:20px;
+}
+.modal-overlay.open{display:flex;}
+.modal-box{
+  background:#fff;border-radius:16px;width:min(460px,100%);
+  box-shadow:0 20px 60px rgba(0,0,0,.3);overflow:hidden;
+}
+.modal-header{
+  background:var(--teal);color:#fff;padding:18px 22px;
+  font-size:18px;font-weight:700;
+}
+.modal-body{padding:22px;}
+.modal-field{margin-bottom:16px;}
+.modal-field label{display:block;font-size:14px;font-weight:700;color:var(--muted);margin-bottom:6px;}
+.modal-field input{
+  width:100%;padding:13px 14px;border:2px solid var(--border);
+  border-radius:var(--r);font-size:16px;font-family:inherit;
+  color:var(--text);outline:none;
+}
+.modal-field input:focus{border-color:var(--teal);}
+.modal-footer{display:flex;gap:12px;padding:0 22px 22px;}
+.modal-btn{
+  flex:1;padding:14px;border:none;border-radius:var(--r);
+  font-size:16px;font-weight:700;cursor:pointer;
+}
+.modal-btn-cancel{background:#f1f5f5;color:var(--muted);}
+.modal-btn-confirm{background:var(--teal);color:#fff;}
+.modal-btn-danger{background:var(--accent);color:#fff;}
+
+/* Confirm dialog (delete) */
+.modal-confirm-msg{
+  font-size:16px;color:var(--text);line-height:1.6;
+  padding:4px 0 8px;
+}
+.modal-confirm-name{font-weight:700;color:var(--teal-dark);}
+
 /* ── MOBILE ── */
 @media(max-width:740px){
   .invoice-page{grid-template-columns:1fr;}
@@ -196,10 +258,6 @@ textarea{resize:vertical;min-height:64px;}
   .cat-form-row{grid-template-columns:1fr 1fr;gap:10px;}
   .cat-form-row .fgrp:first-child{grid-column:1/-1;}
   .cat-add-btn{grid-column:1/-1;height:auto;padding:14px;}
-  .prod-tbl-head{grid-template-columns:30px 1fr 110px 90px;}
-  .prod-tbl-head span:nth-child(5){display:none;}
-  .prod-row{grid-template-columns:30px 1fr 110px 90px;}
-  .prod-acts{flex-direction:column;}
   .tab-bar-title{font-size:14px;}
   .tab-btn{padding:14px 12px;font-size:14px;}
 }
@@ -214,11 +272,53 @@ textarea{resize:vertical;min-height:64px;}
     <div class="lock-title">Siva Sree Enterprises</div>
     <div class="lock-sub">Enter your password to open the app</div>
     <label class="lock-lbl">Password</label>
-    <input class="lock-inp" type="password" id="pwdInput" placeholder="••••••"
-      onkeydown="if(event.key==='Enter')checkPwd()" autocomplete="off" autofocus/>
+    <input class="lock-inp" type="password" id="pwdInput" placeholder="••••••" autocomplete="off" autofocus/>
     <div class="lock-err" id="pwdErr"></div>
-    <button class="lock-btn" onclick="checkPwd()">🔓 &nbsp;Open App</button>
+    <button class="lock-btn">🔓 &nbsp;Open App</button>
     <div class="lock-hint">Tip: Password is in CAPITAL LETTERS</div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal-box">
+    <div class="modal-header">✏️ &nbsp;Edit Product</div>
+    <div class="modal-body">
+      <div class="modal-field">
+        <label>Product Name</label>
+        <input type="text" id="editName" placeholder="Product name"/>
+      </div>
+      <div class="modal-field">
+        <label>Unit Price (Rs.)</label>
+        <input type="number" id="editPrice" placeholder="0.00" min="0" step="0.01"/>
+      </div>
+      <div class="modal-field">
+        <label>Unit (optional)</label>
+        <input type="text" id="editUnit" placeholder="e.g. 500g, kg, pcs"/>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn modal-btn-cancel">Cancel</button>
+      <button class="modal-btn modal-btn-confirm">💾 &nbsp;Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal-box">
+    <div class="modal-header">🗑 &nbsp;Delete Product</div>
+    <div class="modal-body">
+      <p class="modal-confirm-msg">
+        Are you sure you want to remove<br>
+        <span class="modal-confirm-name" id="deleteProductName"></span>?<br><br>
+        This cannot be undone.
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn modal-btn-cancel">Cancel</button>
+      <button class="modal-btn modal-btn-danger">🗑 &nbsp;Yes, Delete</button>
+    </div>
   </div>
 </div>
 
@@ -226,8 +326,8 @@ textarea{resize:vertical;min-height:64px;}
 <div id="mainApp">
   <div class="tab-bar">
     <span class="tab-bar-title">📄 Siva Sree Invoices</span>
-    <button class="tab-btn active" onclick="switchTab('invoice',this)">🧾 Create Invoice</button>
-    <button class="tab-btn" onclick="switchTab('catalog',this)">📦 Product Prices</button>
+    <button class="tab-btn active" data-tab="invoice">🧾 Create Invoice</button>
+    <button class="tab-btn" data-tab="catalog">📦 Product Prices</button>
   </div>
 
   <!-- INVOICE TAB -->
@@ -236,23 +336,23 @@ textarea{resize:vertical;min-height:64px;}
       <div class="inv-form-side">
 
         <div class="sec-lbl">Your Business</div>
-        <div class="form-row s"><div><label>Company Name</label><input id="sellerName" value="Siva Sree Enterprises" oninput="updatePreview()"/></div></div>
-        <div class="form-row s"><div><label>Address</label><textarea id="sellerAddress" oninput="updatePreview()">No 3, First Floor, RagavendraColony, Brindavan Nagar Extension, Madambakkam, Chennai - 600126</textarea></div></div>
+        <div class="form-row s"><div><label>Company Name</label><input id="sellerName" value="Siva Sree Enterprises"/></div></div>
+        <div class="form-row s"><div><label>Address</label><textarea id="sellerAddress">No 3, First Floor, RagavendraColony, Brindavan Nagar Extension, Madambakkam, Chennai - 600126</textarea></div></div>
         <div class="form-row">
-          <div><label>Phone</label><input id="sellerPhone" value="90256 03484" oninput="updatePreview()"/></div>
-          <div><label>Email</label><input id="sellerEmail" value="sivasree71@outlook.com" oninput="updatePreview()"/></div>
+          <div><label>Phone</label><input id="sellerPhone" value="90256 03484"/></div>
+          <div><label>Email</label><input id="sellerEmail" value="sivasree71@outlook.com"/></div>
         </div>
         <div class="form-row">
-          <div><label>Bank A/C No.</label><input id="bankAc" value="1113102100000569" oninput="updatePreview()"/></div>
-          <div><label>IFSC Code</label><input id="bankIfsc" value="PUNB0111310" oninput="updatePreview()"/></div>
+          <div><label>Bank A/C No.</label><input id="bankAc" value="1113102100000569"/></div>
+          <div><label>IFSC Code</label><input id="bankIfsc" value="PUNB0111310"/></div>
         </div>
 
         <div class="sec-lbl">Invoice Details</div>
         <div class="form-row t">
-          <div><label>Invoice No.</label><input id="invoiceNo" value="113" oninput="updatePreview()"/></div>
-          <div><label>Date</label><input type="date" id="invoiceDate" oninput="updatePreview()"/></div>
+          <div><label>Invoice No.</label><input id="invoiceNo" value="113"/></div>
+          <div><label>Date</label><input type="date" id="invoiceDate"/></div>
           <div><label>Currency</label>
-            <select id="currency" onchange="rebuildItemRows();updatePreview();">
+            <select id="currency">
               <option value="₹">₹ INR</option>
               <option value="$">$ USD</option>
               <option value="€">€ EUR</option>
@@ -260,21 +360,20 @@ textarea{resize:vertical;min-height:64px;}
           </div>
         </div>
         <div class="form-row">
-          <div><label>Tax Label</label><input id="taxLabel" value="Sales Tax" oninput="updatePreview()"/></div>
-          <div><label>Tax %</label><input type="number" id="taxRate" value="0" min="0" max="100" oninput="updatePreview()"/></div>
+          <div><label>Tax Label</label><input id="taxLabel" value="Sales Tax"/></div>
+          <div><label>Tax %</label><input type="number" id="taxRate" value="0" min="0" max="100"/></div>
         </div>
 
         <div class="sec-lbl">Customer (Bill To)</div>
-        <div class="form-row s"><div><label>Customer Name</label><input id="buyerName" value="Tiaano Vidyashrm" oninput="updatePreview()"/></div></div>
-        <div class="form-row s"><div><label>Customer Address</label><textarea id="buyerAddress" oninput="updatePreview()">#250, pushpagiri, sethupattu village, Manimangalam - 610301</textarea></div></div>
+        <div class="form-row s"><div><label>Customer Name</label><input id="buyerName" value="Tiaano Vidyashrm"/></div></div>
+        <div class="form-row s"><div><label>Customer Address</label><textarea id="buyerAddress">#250, pushpagiri, sethupattu village, Manimangalam - 610301</textarea></div></div>
 
         <div class="sec-lbl">Items / Products</div>
-        <!-- Desktop header -->
         <div class="items-thead">
           <span>Product</span><span style="text-align:center">Qty</span><span style="text-align:right">Unit Price → Total</span><span></span>
         </div>
         <div class="items-body" id="itemsBody"></div>
-        <button class="add-item-btn" onclick="addItem()">＋ &nbsp;Add Another Product</button>
+        <button class="add-item-btn">＋ &nbsp;Add Another Product</button>
 
         <div class="totals-block">
           <div class="tot-row"><span>Subtotal</span><span id="sumSubtotal">₹ 0.00</span></div>
@@ -283,11 +382,11 @@ textarea{resize:vertical;min-height:64px;}
         </div>
 
         <div class="sec-lbl">Notes / Terms</div>
-        <div class="form-row s"><div><textarea id="notes" placeholder="e.g. Payment due within 30 days" rows="2" oninput="updatePreview()"></textarea></div></div>
+        <div class="form-row s"><div><textarea id="notes" placeholder="e.g. Payment due within 30 days" rows="2"></textarea></div></div>
 
         <div class="actions">
-          <button class="btn btn-secondary" onclick="resetForm()">🔄 &nbsp;Reset</button>
-          <button class="btn btn-primary" onclick="downloadPDF()">⬇ &nbsp;Download PDF</button>
+          <button class="btn btn-secondary">🔄 &nbsp;Reset</button>
+          <button class="btn btn-primary">⬇ &nbsp;Download PDF</button>
         </div>
       </div>
 
@@ -307,10 +406,10 @@ textarea{resize:vertical;min-height:64px;}
       <div class="add-product-card">
         <h3>➕ Add New Product</h3>
         <div class="cat-form-row">
-          <div class="fgrp"><label>Product Name</label><input type="text" id="newProdName" placeholder="e.g. Darmona Premium Tea 500g" onkeydown="if(event.key==='Enter')addProduct()"/></div>
-          <div class="fgrp"><label>Unit Price (₹)</label><input type="number" id="newProdPrice" placeholder="250" min="0" step="0.01" onkeydown="if(event.key==='Enter')addProduct()"/></div>
-          <div class="fgrp"><label>Unit (optional)</label><input type="text" id="newProdUnit" placeholder="500g / kg / pcs" onkeydown="if(event.key==='Enter')addProduct()"/></div>
-          <div class="fgrp"><label>&nbsp;</label><button class="cat-add-btn" onclick="addProduct()">💾 Save Product</button></div>
+          <div class="fgrp"><label>Product Name</label><input type="text" id="newProdName" placeholder="e.g. Darmona Premium Tea 500g"/></div>
+          <div class="fgrp"><label>Unit Price (₹)</label><input type="number" id="newProdPrice" placeholder="250" min="0" step="0.01"/></div>
+          <div class="fgrp"><label>Unit (optional)</label><input type="text" id="newProdUnit" placeholder="500g / kg / pcs"/></div>
+          <div class="fgrp"><label>&nbsp;</label><button class="cat-add-btn">💾 Save Product</button></div>
         </div>
       </div>
       <div class="prod-tbl-wrap">
@@ -387,54 +486,110 @@ function addProduct(){
   document.getElementById('newProdName').focus();
 }
 
+let _editingId = null;
+let _deletingId = null;
+
+function closeModals(){
+  document.getElementById('editModal').classList.remove('open');
+  document.getElementById('deleteModal').classList.remove('open');
+  _editingId = null;
+  _deletingId = null;
+}
+
 function deleteProduct(id){
-  if(!confirm('Remove this product from the list?'))return;
-  products=products.filter(p=>p.id!==id);
+  const p = products.find(x=>x.id===id);
+  if(!p) return;
+  _deletingId = id;
+  document.getElementById('deleteProductName').textContent = p.name;
+  document.getElementById('deleteModal').classList.add('open');
+}
+
+function confirmDelete(){
+  if(_deletingId===null) return;
+  products = products.filter(p=>p.id!==_deletingId);
   saveProducts();
+  closeModals();
   renderCatalog();
   rebuildItemRows();
   updatePreview();
 }
 
 function editProduct(id){
-  const p=products.find(x=>x.id===id);
-  if(!p)return;
-  const newName=prompt('Product name:',p.name);
-  if(newName===null)return;
-  if(!newName.trim()){alert('Name cannot be empty.');return;}
-  const newPriceStr=prompt('Unit price (₹):',p.price);
-  if(newPriceStr===null)return;
-  const newPrice=parseFloat(newPriceStr);
-  if(isNaN(newPrice)||newPrice<=0){alert('Please enter a valid price.');return;}
-  const newUnit=prompt('Unit (e.g. 500g, kg, pcs):',p.unit)||'';
-  p.name=newName.trim();p.price=newPrice;p.unit=newUnit.trim();
+  const p = products.find(x=>x.id===id);
+  if(!p) return;
+  _editingId = id;
+  document.getElementById('editName').value  = p.name;
+  document.getElementById('editPrice').value = p.price;
+  document.getElementById('editUnit').value  = p.unit||'';
+  document.getElementById('editModal').classList.add('open');
+  setTimeout(()=>document.getElementById('editName').focus(), 100);
+}
+
+function confirmEdit(){
+  if(_editingId===null) return;
+  const p = products.find(x=>x.id===_editingId);
+  if(!p) return;
+  const newName  = (document.getElementById('editName').value||'').trim();
+  const newPrice = parseFloat(document.getElementById('editPrice').value);
+  const newUnit  = (document.getElementById('editUnit').value||'').trim();
+  if(!newName)         { document.getElementById('editName').focus();  return; }
+  if(!newPrice||newPrice<=0){ document.getElementById('editPrice').focus(); return; }
+  p.name  = newName;
+  p.price = newPrice;
+  p.unit  = newUnit;
   saveProducts();
+  closeModals();
   renderCatalog();
   rebuildItemRows();
   updatePreview();
 }
 
+/* Delegated click listener for catalog Edit/Delete buttons */
+document.addEventListener('click', function(e){
+  const btn = e.target.closest('button[data-action]');
+  if(!btn) return;
+  const action = btn.dataset.action;
+  const id = parseInt(btn.dataset.id);
+  if(action==='edit')   editProduct(id);
+  if(action==='delete') deleteProduct(id);
+});
+
 function renderCatalog(){
   const list=document.getElementById('productList');
   if(!list)return;
   if(!products.length){
-    list.innerHTML='<div class="empty-catalog">No products yet. Add your first product above ☝️</div>';
+    list.innerHTML='<div class="empty-catalog">No products yet.<br>Add your first product above ☝️</div>';
     return;
   }
   list.innerHTML=products.map((p,i)=>`
+    <!-- Desktop row -->
     <div class="prod-row">
       <span class="prod-num">${i+1}</span>
       <span class="prod-name-cell">${esc(p.name)}</span>
       <span class="prod-unit-cell">${esc(p.unit||'—')}</span>
-      <span class="prod-price-cell">₹ ${fmt(p.price)}</span>
+      <span class="prod-price-cell">Rs. ${fmt(p.price)}</span>
       <div class="prod-acts">
-        <button class="prod-edit-btn" onclick="editProduct(${p.id})">✏️ Edit</button>
-        <button class="prod-del-btn" onclick="deleteProduct(${p.id})">🗑 Delete</button>
+        <button class="prod-edit-btn" data-action="edit" data-id="${p.id}">✏️ Edit</button>
+        <button class="prod-del-btn"  data-action="delete" data-id="${p.id}">🗑 Delete</button>
+      </div>
+    </div>
+    <!-- Mobile card -->
+    <div class="prod-card">
+      <div class="prod-card-top">
+        <span class="prod-card-name">${esc(p.name)}</span>
+        <span class="prod-card-num">#${i+1}</span>
+      </div>
+      <div class="prod-card-mid">
+        <span class="prod-card-unit">${esc(p.unit||'—')}</span>
+        <span class="prod-card-price">Rs. ${fmt(p.price)}</span>
+      </div>
+      <div class="prod-card-btns">
+        <button class="prod-edit-btn" data-action="edit" data-id="${p.id}">✏️&nbsp; Edit</button>
+        <button class="prod-del-btn"  data-action="delete" data-id="${p.id}">🗑&nbsp; Delete</button>
       </div>
     </div>`).join('');
 }
 
-/* ── INVOICE ITEMS ── */
 let items=[{prodId:1,qty:19}];
 document.getElementById('invoiceDate').value=new Date().toISOString().split('T')[0];
 
@@ -488,15 +643,14 @@ function rebuildItemRows(){
       /* ── MOBILE CARD ── */
       row.innerHTML=`
         <div class="item-mobile">
-          <select class="item-mob-select" onchange="onSelectChange(${i},this.value)">
+          <select class="item-mob-select">
             ${prodOptions(it.prodId)}
           </select>
           <div class="item-mob-row">
             <div class="item-mob-qty-wrap">
               <label>Quantity</label>
-              <input class="item-mob-qty" type="number" min="0" value="${it.qty}"
-                onchange="onQtyChange(${i},this.value)"
-                oninput="updateRowTotal(${i})"/>
+              <input class="item-mob-qty" type="text" inputmode="numeric" pattern="[0-9]*"
+                placeholder="0" value="${it.qty}" autocomplete="off" autocorrect="off" autocapitalize="off"/>
             </div>
             <div class="item-mob-price">
               <div class="item-mob-price-val" id="mprice_${i}">${cur} ${fmt(price)}</div>
@@ -505,26 +659,63 @@ function rebuildItemRows(){
           </div>
           <div class="item-mob-total" id="mtotal_${i}">Total: ${cur} ${fmt(total)}</div>
           <div class="item-mob-footer">
-            <span style="font-size:12px;color:var(--muted)">Row ${i+1}</span>
-            <button class="del-item-btn" onclick="removeItem(${i})">✕ Remove</button>
+            <button class="del-item-btn">✕ Remove</button>
+            <button class="upd-item-btn" style="background:var(--teal);color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer;">✓ Done</button>
           </div>
         </div>`;
+
+      const sel = row.querySelector('.item-mob-select');
+      const qty = row.querySelector('.item-mob-qty');
+      const del = row.querySelector('.del-item-btn');
+      const upd = row.querySelector('.upd-item-btn');
+
+      sel.addEventListener('change', ()=>{
+        items[i].prodId = sel.value ? parseInt(sel.value) : null;
+        onSelectChange(i, sel.value);
+      });
+      qty.addEventListener('input', ()=>{
+        items[i].qty = parseFloat(qty.value) || 0;
+        updateRowTotal(i);
+      });
+      upd.addEventListener('click', ()=>{
+        items[i].qty = parseFloat(qty.value) || 0;
+        updateRowTotal(i);
+        updatePreview();
+        qty.blur(); // dismiss keyboard after Done
+      });
+      del.addEventListener('click', ()=> removeItem(i));
+
     } else {
       /* ── DESKTOP ROW ── */
       row.innerHTML=`
         <div class="item-desktop">
-          <select class="item-prod-select" onchange="onSelectChange(${i},this.value)">
+          <select class="item-prod-select">
             ${prodOptions(it.prodId)}
           </select>
-          <input class="item-qty" type="number" min="0" value="${it.qty}"
-            onchange="onQtyChange(${i},this.value)"
-            oninput="updateRowTotal(${i})"/>
+          <input class="item-qty" type="text" inputmode="numeric" pattern="[0-9]*"
+            placeholder="0" value="${it.qty}" autocomplete="off"/>
           <div class="item-price-display" id="dprice_${i}">
             ${cur} ${fmt(price)}&nbsp;→&nbsp;<span id="dtotal_${i}" style="color:#fff;background:var(--teal);padding:2px 7px;border-radius:5px">${cur} ${fmt(total)}</span>
           </div>
-          <button class="del-item-btn" onclick="removeItem(${i})">✕</button>
+          <button class="del-item-btn">✕</button>
         </div>`;
+
+      const sel = row.querySelector('.item-prod-select');
+      const qty = row.querySelector('.item-qty');
+      const del = row.querySelector('.del-item-btn');
+
+      sel.addEventListener('change', ()=>{
+        items[i].prodId = sel.value ? parseInt(sel.value) : null;
+        onSelectChange(i, sel.value);
+      });
+      qty.addEventListener('input', ()=>{
+        items[i].qty = parseFloat(qty.value) || 0;
+        updateRowTotal(i);
+        updatePreview();
+      });
+      del.addEventListener('click', ()=> removeItem(i));
     }
+
     body.appendChild(row);
   });
 }
@@ -610,10 +801,9 @@ function removeItem(i){
 /* Sync qty from DOM back to items[] before PDF/preview */
 function syncQtyFromDOM(){
   items.forEach((it,i)=>{
-    const el = mob()
-      ? document.querySelector(`#irow_${i} .item-mob-qty`)
-      : document.querySelector(`#irow_${i} .item-qty`);
-    if(el) it.qty = parseFloat(el.value)||0;
+    const sel = mob() ? '.item-mob-qty' : '.item-qty';
+    const el = document.querySelector(`#irow_${i} ${sel}`);
+    if(el) it.qty = parseFloat(el.value) || 0;
   });
 }
 
@@ -703,86 +893,91 @@ function downloadPDF(){
     ? new Date(v('invoiceDate')).toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})
     : '';
 
-  // jsPDF helvetica cannot render ₹ — use Rs. which renders cleanly
-  const curSymbol = v('currency')||'Rs.';
-  const pdfCur = curSymbol==='₹' ? 'Rs.' : curSymbol;
+  const curSymbol=v('currency')||'Rs.';
+  const pdfCur=curSymbol==='₹'?'Rs.':curSymbol;
 
   const W=210, M=18, RX=W-M;
+  const DARK=[20,20,20], GREY=[100,100,100], LGREY=[160,160,160];
+  const TEAL_D=[30,80,80]; // dark teal for text/borders only — no fills
   let y=0;
 
-  /* ══ HEADER BANNER ══ */
-  doc.setFillColor(45,107,107);
-  doc.rect(0,0,W,30,'F');
+  /* ══ HEADER — text only, no fills ══ */
+  // Top border line
+  doc.setDrawColor(...TEAL_D);
+  doc.setLineWidth(1.2);
+  doc.line(0, 0, W, 0);
 
-  // Company name — left side, white
+  // Company name
   const coName=v('sellerName')||'Company';
   doc.setFont('helvetica','bold');
-  let fs=16;
-  doc.setFontSize(fs);
-  while(doc.getTextWidth(coName)>(W*0.58)&&fs>9){fs--;doc.setFontSize(fs);}
-  doc.setTextColor(255,255,255);
-  doc.text(coName, M, 19);
+  let fs=18; doc.setFontSize(fs);
+  while(doc.getTextWidth(coName)>(W*0.60)&&fs>10){fs--;doc.setFontSize(fs);}
+  doc.setTextColor(...TEAL_D);
+  doc.text(coName, M, 14);
 
-  // "Invoice" badge — right side, white box teal text
-  doc.setFillColor(255,255,255);
-  doc.roundedRect(W-52, 6, 34, 18, 2, 2, 'F');
+  // "INVOICE" label — right, outlined box (stroke only, no fill)
   doc.setFont('helvetica','bold');
-  doc.setFontSize(14);
-  doc.setTextColor(45,107,107);
-  doc.text('Invoice', W-35, 18, {align:'center'});
-  y=34;
+  doc.setFontSize(16);
+  doc.setTextColor(...TEAL_D);
+  doc.text('INVOICE', RX, 14, {align:'right'});
+
+  // Thin separator line under header
+  doc.setDrawColor(...TEAL_D);
+  doc.setLineWidth(0.6);
+  doc.line(M, 18, RX, 18);
+  y=23;
 
   /* ══ SELLER ADDRESS ══ */
   doc.setFont('helvetica','normal');
   doc.setFontSize(8);
-  doc.setTextColor(110,110,110);
+  doc.setTextColor(...GREY);
   const addrLine=(v('sellerAddress')||'').replace(/\n/g,', ');
-  doc.text(addrLine, M, y, {maxWidth: W-2*M});
-  y+=7;
+  doc.text(addrLine, M, y, {maxWidth:W-2*M});
+  y+=8;
 
-  /* ══ DIVIDER ══ */
-  doc.setDrawColor(45,107,107);
-  doc.setLineWidth(0.5);
-  doc.line(M, y, RX, y);
-  y+=6;
-
-  /* ══ BUYER BLOCK (left) ══ */
+  /* ══ BUYER + META — two columns ══ */
   const buyerStartY=y;
+
+  // Left: Buyer
   doc.setFont('helvetica','normal');
   doc.setFontSize(8);
-  doc.setTextColor(120,120,120);
-  doc.text('Buyer:', M, y);
+  doc.setTextColor(...LGREY);
+  doc.text('BILL TO', M, y);
+  y+=4.5;
 
   doc.setFont('helvetica','bold');
   doc.setFontSize(10);
-  doc.setTextColor(15,15,15);
-  doc.text(v('buyerName')||'', M+18, y);
+  doc.setTextColor(...DARK);
+  doc.text(v('buyerName')||'', M, y);
   y+=5;
 
   doc.setFont('helvetica','normal');
   doc.setFontSize(8.5);
-  doc.setTextColor(50,50,50);
-  const addrLines=(v('buyerAddress')||'').split('\n');
-  addrLines.forEach(l=>{ if(l.trim()){doc.text(l, M+18, y); y+=4.5;} });
+  doc.setTextColor(...GREY);
+  (v('buyerAddress')||'').split('\n').forEach(l=>{
+    if(l.trim()){doc.text(l, M, y); y+=4.5;}
+  });
 
-  /* ══ DATE / INVOICE # (right) ══ */
-  const metaY=buyerStartY;
+  // Right: Date + Invoice #
+  const metaLabelX=RX-55, metaValX=RX;
+  const mY=buyerStartY;
+
   doc.setFont('helvetica','normal');
   doc.setFontSize(8);
-  doc.setTextColor(120,120,120);
-  doc.text('Date:', RX-55, metaY);
-  doc.text('Invoice #:', RX-55, metaY+6);
+  doc.setTextColor(...LGREY);
+  doc.text('Date', metaLabelX, mY+4);
+  doc.text('Invoice No.', metaLabelX, mY+10);
 
   doc.setFont('helvetica','bold');
   doc.setFontSize(9);
-  doc.setTextColor(15,15,15);
-  doc.text(dateStr, RX, metaY, {align:'right'});
-  doc.text(serialNo, RX, metaY+6, {align:'right'});
+  doc.setTextColor(...DARK);
+  doc.text(dateStr, metaValX, mY+4, {align:'right'});
+  doc.text(serialNo, metaValX, mY+10, {align:'right'});
 
-  y=Math.max(y, metaY+14)+4;
+  y=Math.max(y, mY+18)+5;
 
-  /* ══ ITEMS TABLE ══ */
-  const thead=[['S.No', 'Description', 'Qty', 'Unit Price', 'Total']];
+  /* ══ ITEMS TABLE — no fills, border only ══ */
+  const thead=[['S.No','Description','Qty','Unit Price','Total']];
   const tbody=items.map((it,i)=>[
     String(i+1),
     getItemDesc(it)||'—',
@@ -790,7 +985,6 @@ function downloadPDF(){
     `${pdfCur} ${fmt(getItemPrice(it))}`,
     `${pdfCur} ${fmt(getItemTotal(it))}`
   ]);
-  // pad to 8 rows minimum
   while(tbody.length<8) tbody.push(['','','','','']);
 
   doc.autoTable({
@@ -802,19 +996,21 @@ function downloadPDF(){
     styles: {
       font:'helvetica',
       fontSize: 9,
-      cellPadding: {top:3,bottom:3,left:4,right:4},
-      textColor: [15,15,15],
-      lineColor: [210,225,225],
-      lineWidth: 0.2,
+      cellPadding: {top:3.5,bottom:3.5,left:4,right:4},
+      textColor: [...DARK],
+      fillColor: false,           // NO background fill on rows
+      lineColor: [180,195,195],
+      lineWidth: 0.25,
     },
     headStyles: {
-      fillColor: [45,107,107],
-      textColor: [255,255,255],
+      fillColor: false,           // NO teal fill on header
+      textColor: [...TEAL_D],
       fontStyle: 'bold',
       fontSize: 9,
-      halign: 'left',
+      lineColor: [...TEAL_D],
+      lineWidth: 0.5,
     },
-    alternateRowStyles: {fillColor:[246,251,251]},
+    alternateRowStyles: {fillColor: false}, // NO alternate row shading
     columnStyles: {
       0: {cellWidth:12, halign:'center', fontStyle:'bold'},
       1: {cellWidth:'auto', halign:'left'},
@@ -823,70 +1019,87 @@ function downloadPDF(){
       4: {cellWidth:34, halign:'right', fontStyle:'bold'},
     },
     didParseCell: (data)=>{
-      // make empty padding rows lighter
+      // empty padding rows — no fill, lighter text
       if(data.section==='body' && !data.row.raw[0]){
-        data.cell.styles.fillColor=[250,252,252];
+        data.cell.styles.fillColor=false;
+        data.cell.styles.textColor=[220,220,220];
       }
     }
   });
 
   y=doc.lastAutoTable.finalY+5;
 
-  /* ══ FOOTER: BANK LEFT + TOTALS RIGHT ══ */
-  doc.setDrawColor(45,107,107);
-  doc.setLineWidth(0.6);
+  /* ══ FOOTER DIVIDER ══ */
+  doc.setDrawColor(...TEAL_D);
+  doc.setLineWidth(0.5);
   doc.line(M, y, RX, y);
   y+=5;
 
-  // Bank details
-  doc.setFont('helvetica','bold');
+  /* ══ BANK DETAILS (left) ══ */
   doc.setFontSize(8.5);
-  doc.setTextColor(15,15,15);
-  if(v('bankAc'))   { doc.text('A/C  : ', M, y+4); doc.setFont('helvetica','normal'); doc.text(v('bankAc'), M+18, y+4); doc.setFont('helvetica','bold'); }
-  if(v('bankIfsc')) { doc.text('IFSC : ', M, y+10); doc.setFont('helvetica','normal'); doc.text(v('bankIfsc'), M+18, y+10); doc.setFont('helvetica','bold'); }
+  doc.setTextColor(...GREY);
+  doc.setFont('helvetica','bold');
+  if(v('bankAc')){
+    doc.text('A/C  :', M, y+4);
+    doc.setFont('helvetica','normal');
+    doc.setTextColor(...DARK);
+    doc.text(v('bankAc'), M+20, y+4);
+  }
+  if(v('bankIfsc')){
+    doc.setFont('helvetica','bold');
+    doc.setTextColor(...GREY);
+    doc.text('IFSC :', M, y+10);
+    doc.setFont('helvetica','normal');
+    doc.setTextColor(...DARK);
+    doc.text(v('bankIfsc'), M+20, y+10);
+  }
 
-  // Totals block — right aligned
-  const labelX=RX-52, valX=RX;
+  /* ══ TOTALS (right) — bordered box, no fill ══ */
+  const labelX=RX-55, valX=RX;
+
   doc.setFont('helvetica','normal');
   doc.setFontSize(9);
-  doc.setTextColor(80,80,80);
-
+  doc.setTextColor(...GREY);
   doc.text('Subtotal', labelX, y+4);
+  doc.setTextColor(...DARK);
   doc.text(`${pdfCur} ${fmt(t.sub)}`, valX, y+4, {align:'right'});
 
+  doc.setTextColor(...GREY);
   doc.text(`${taxLabel} (${t.rate}%)`, labelX, y+10);
+  doc.setTextColor(...DARK);
   doc.text(t.rate>0 ? `${pdfCur} ${fmt(t.tax)}` : '---', valX, y+10, {align:'right'});
 
-  // Grand total — filled box
-  const boxX=labelX-3, boxW=RX-labelX+3+3;
-  doc.setFillColor(45,107,107);
-  doc.roundedRect(boxX, y+13, boxW, 10, 2, 2, 'F');
+  // Grand total — border box only (no fill = ink saving)
+  const boxX=labelX-2, boxW=RX-labelX+5;
+  doc.setDrawColor(...TEAL_D);
+  doc.setLineWidth(0.7);
+  doc.rect(boxX, y+13, boxW, 10, 'S'); // 'S' = stroke only, no fill
   doc.setFont('helvetica','bold');
   doc.setFontSize(10);
-  doc.setTextColor(255,255,255);
+  doc.setTextColor(...TEAL_D);
   doc.text('Total', labelX, y+20);
   doc.text(`${pdfCur} ${fmt(t.total)}`, valX, y+20, {align:'right'});
 
-  y+=30;
+  y+=32;
 
   /* ══ NOTES ══ */
   if(v('notes')){
     doc.setFont('helvetica','italic');
     doc.setFontSize(8);
-    doc.setTextColor(100,100,100);
+    doc.setTextColor(...GREY);
     doc.text(`Notes: ${v('notes')}`, M, y, {maxWidth:W-2*M});
     y+=7;
   }
 
   /* ══ THANK YOU FOOTER ══ */
-  doc.setDrawColor(200,200,200);
+  doc.setDrawColor(180,180,180);
   doc.setLineWidth(0.25);
   doc.line(M, y, RX, y);
   y+=6;
 
   doc.setFont('helvetica','bold');
   doc.setFontSize(9);
-  doc.setTextColor(90,90,90);
+  doc.setTextColor(...GREY);
   doc.text('Thank you for your business!', W/2, y, {align:'center'});
   y+=5;
 
@@ -894,17 +1107,81 @@ function downloadPDF(){
   doc.setFontSize(8.5);
   const phone=v('sellerPhone'), email=v('sellerEmail');
   const contactLine=[phone,email].filter(Boolean).join('   |   ');
-  if(contactLine) doc.text(contactLine, W/2, y, {align:'center'});
+  if(contactLine){ doc.setTextColor(...DARK); doc.text(contactLine, W/2, y, {align:'center'}); }
 
-  /* ══ SERIAL # WATERMARK ══ */
+  // Bottom border line
+  doc.setDrawColor(...TEAL_D);
+  doc.setLineWidth(1.0);
+  doc.line(0, 296, W, 296);
+
+  /* ══ SERIAL # ══ */
+  doc.setFont('helvetica','normal');
   doc.setFontSize(7);
-  doc.setTextColor(190,190,190);
-  doc.text(serialNo, RX, 290, {align:'right'});
+  doc.setTextColor(180,180,180);
+  doc.text(serialNo, RX, 291, {align:'right'});
 
   doc.save(`${serialNo}_${(v('buyerName')||'invoice').replace(/\s+/g,'_')}.pdf`);
 }
 
-window.addEventListener('resize',()=>{rebuildItemRows();updatePreview();});
+/* Only rebuild on real orientation/layout changes, not keyboard open/close.
+   On mobile, keyboard open shrinks window.innerHeight but not window.innerWidth.
+   We only rebuild if WIDTH changes (orientation) or on desktop resize. */
+let _lastW = window.innerWidth;
+window.addEventListener('resize', ()=>{
+  const newW = window.innerWidth;
+  if(newW !== _lastW){
+    _lastW = newW;
+    rebuildItemRows();
+  }
+  updatePreview();
+});
+
+/* ── WIRE ALL STATIC BUTTONS via addEventListener (mobile-safe) ── */
+document.addEventListener('DOMContentLoaded', ()=>{
+
+  // Lock screen
+  document.getElementById('pwdInput').addEventListener('keydown', e=>{ if(e.key==='Enter') checkPwd(); });
+  document.querySelector('.lock-btn').addEventListener('click', checkPwd);
+
+  // Tab bar
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>switchTab(btn.dataset.tab, btn));
+  });
+
+  // Currency select
+  document.getElementById('currency').addEventListener('change', ()=>{ rebuildItemRows(); updatePreview(); });
+
+  // All oninput preview fields
+  ['sellerName','sellerAddress','sellerPhone','sellerEmail',
+   'bankAc','bankIfsc','invoiceNo','invoiceDate','taxLabel','taxRate',
+   'buyerName','buyerAddress','notes'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.addEventListener('input', updatePreview);
+  });
+
+  // Add item / Reset / Download
+  document.querySelector('.add-item-btn').addEventListener('click', addItem);
+  document.querySelector('.btn-secondary').addEventListener('click', resetForm);
+  document.querySelector('.btn-primary').addEventListener('click', downloadPDF);
+
+  // Catalog: Add product button
+  document.querySelector('.cat-add-btn').addEventListener('click', addProduct);
+  document.getElementById('newProdName').addEventListener('keydown',  e=>{ if(e.key==='Enter') addProduct(); });
+  document.getElementById('newProdPrice').addEventListener('keydown', e=>{ if(e.key==='Enter') addProduct(); });
+  document.getElementById('newProdUnit').addEventListener('keydown',  e=>{ if(e.key==='Enter') addProduct(); });
+
+  // Modal buttons
+  document.querySelectorAll('.modal-btn-cancel').forEach(b=> b.addEventListener('click', closeModals));
+  document.querySelector('.modal-btn-confirm').addEventListener('click', confirmEdit);
+  document.querySelector('.modal-btn-danger').addEventListener('click', confirmDelete);
+  document.getElementById('editModal').addEventListener('click',  e=>{ if(e.target===document.getElementById('editModal'))  closeModals(); });
+  document.getElementById('deleteModal').addEventListener('click', e=>{ if(e.target===document.getElementById('deleteModal')) closeModals(); });
+
+  // Enter key in edit modal
+  document.getElementById('editName').addEventListener('keydown',  e=>{ if(e.key==='Enter') confirmEdit(); });
+  document.getElementById('editPrice').addEventListener('keydown', e=>{ if(e.key==='Enter') confirmEdit(); });
+  document.getElementById('editUnit').addEventListener('keydown',  e=>{ if(e.key==='Enter') confirmEdit(); });
+});
 </script>
 </body>
 </html>
